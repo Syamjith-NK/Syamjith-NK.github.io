@@ -1,0 +1,51 @@
+<!doctype html>
+<html lang="en">
+<head>
+<meta charset="utf-8">
+<meta name="viewport" content="width=device-width,initial-scale=1">
+<title>Syamjith NK — writing</title>
+<meta name="description" content="Measured notes on Arabic text handling in Python, and the upstream fixes that came out of them.">
+<link rel="alternate" type="application/rss+xml" title="Syamjith NK" href="/feed.xml">
+<style>
+:root{ --ink:#16181d; --ink-2:#4a5058; --ink-3:#767d87; --line:#e3e6ea; --bg:#fbfbfa; --link:#0b5cd5; }
+@media (prefers-color-scheme:dark){
+  :root{ --ink:#e8eaed; --ink-2:#a8b0ba; --ink-3:#767d87; --line:#282c33; --bg:#14161a; --link:#79aaff; }
+}
+*{box-sizing:border-box}
+body{margin:0;background:var(--bg);color:var(--ink);
+ font:17px/1.65 -apple-system,BlinkMacSystemFont,"Segoe UI",Inter,system-ui,sans-serif;
+ -webkit-font-smoothing:antialiased}
+.wrap{max-width:46rem;margin:0 auto;padding:clamp(28px,6vw,72px) clamp(20px,5vw,32px)}
+a{color:var(--link)}
+header{border-bottom:1px solid var(--line);padding-bottom:22px;margin-bottom:38px}
+h1{font-size:19px;margin:0;letter-spacing:-.01em}
+header p{margin:8px 0 0;color:var(--ink-2);font-size:15px}
+ul.posts{list-style:none;padding:0;margin:0}
+ul.posts li{padding:20px 0;border-bottom:1px solid var(--line)}
+ul.posts a{font-size:19px;font-weight:600;text-decoration:none;letter-spacing:-.01em}
+ul.posts a:hover{text-decoration:underline}
+ul.posts .meta{display:block;margin-top:7px;color:var(--ink-3);font-size:14px;
+ font-variant-numeric:tabular-nums}
+ul.posts .dek{margin:9px 0 0;color:var(--ink-2);font-size:15.5px}
+footer{margin-top:46px;color:var(--ink-3);font-size:14px}
+</style>
+</head>
+<body><div class="wrap">
+<header>
+  <h1>Syamjith NK</h1>
+  <p>Measured notes on Arabic text handling, and the upstream fixes that came out of them.
+     <a href="https://github.com/Syamjith-NK">GitHub</a></p>
+</header>
+
+<ul class="posts">
+  <li>
+    <a href="/arabic-reshape-bidi-is-now-the-bug/">The Arabic fix everyone recommends is now the bug</a>
+    <span class="meta">3 September 2026</span>
+    <p class="dek">The most-copied recipe for rendering Arabic in Python reverses your text on
+      matplotlib 3.11, with no error. What happened when I filed it against Pillow and matplotlib.</p>
+  </li>
+</ul>
+
+<footer>Source: <a href="https://github.com/Syamjith-NK/Syamjith-NK.github.io">this site</a></footer>
+</div></body>
+</html>

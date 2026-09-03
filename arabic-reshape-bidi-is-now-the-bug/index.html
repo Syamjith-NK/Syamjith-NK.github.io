@@ -1,0 +1,113 @@
+<!doctype html>
+<html lang="en"><head><meta charset="utf-8">
+<meta name="viewport" content="width=device-width,initial-scale=1">
+<title>The Arabic fix everyone recommends is now the bug — Syamjith NK</title>
+<meta name="description" content="The most-copied recipe for rendering Arabic in Python reverses your text on matplotlib 3.11, with no error.">
+<meta property="og:title" content="The Arabic fix everyone recommends is now the bug">
+<meta property="og:description" content="The most-copied recipe for rendering Arabic in Python reverses your text on matplotlib 3.11, with no error.">
+<meta property="og:type" content="article">
+<style>
+:root{ --ink:#16181d; --ink-2:#3f454d; --ink-3:#767d87; --line:#e3e6ea; --bg:#fbfbfa; --link:#0b5cd5; --code:#f2f3f5; }
+@media (prefers-color-scheme:dark){
+  :root{ --ink:#e8eaed; --ink-2:#b9c0c9; --ink-3:#767d87; --line:#282c33; --bg:#14161a; --link:#79aaff; --code:#1c1f25; }
+}
+*{box-sizing:border-box}
+body{margin:0;background:var(--bg);color:var(--ink);
+ font:17.5px/1.7 -apple-system,BlinkMacSystemFont,"Segoe UI",Inter,system-ui,sans-serif;-webkit-font-smoothing:antialiased}
+.wrap{max-width:44rem;margin:0 auto;padding:clamp(28px,6vw,72px) clamp(20px,5vw,32px)}
+a{color:var(--link)}
+.back{font-size:14px;color:var(--ink-3);text-decoration:none}
+h1{font-size:clamp(28px,4.4vw,38px);line-height:1.18;letter-spacing:-.022em;margin:26px 0 10px}
+h2{font-size:21px;letter-spacing:-.012em;margin:44px 0 12px}
+.date{color:var(--ink-3);font-size:14.5px;margin:0 0 6px}
+p{color:var(--ink-2);margin:0 0 19px}
+strong{color:var(--ink)}
+code{background:var(--code);padding:.12em .34em;border-radius:4px;font-size:.9em;
+ font-family:ui-monospace,SFMono-Regular,Menlo,"Noto Naskh Arabic","Geeza Pro","Arial Unicode MS",monospace}
+pre{background:var(--code);padding:16px 18px;border-radius:8px;overflow-x:auto;margin:0 0 20px}
+pre code{background:none;padding:0;font-size:14px;line-height:1.55}
+/* An Arabic-capable face after the monospace ones: per-character fallback
+   gives Latin the mono and Arabic a font that actually shapes. Without it
+   the sample renders unjoined - on this post, of all posts. */
+pre code, code{font-variant-ligatures:none}
+table{border-collapse:collapse;width:100%;margin:0 0 22px;font-size:15.5px}
+th,td{text-align:left;padding:9px 12px;border-bottom:1px solid var(--line)}
+th{color:var(--ink-3);font-weight:600;font-size:13px;text-transform:uppercase;letter-spacing:.05em}
+ul{color:var(--ink-2);padding-left:22px;margin:0 0 19px}
+li{margin:0 0 8px}
+footer{margin-top:52px;padding-top:22px;border-top:1px solid var(--line);color:var(--ink-3);font-size:14.5px}
+</style></head>
+<body><div class="wrap">
+<a class="back" href="/">&larr; Syamjith NK</a>
+<p class="date" style="margin-top:26px">3 September 2026</p>
+<h1>The Arabic fix everyone recommends is now the bug</h1>
+
+<p>If you have ever drawn Arabic text in Python, you have met this line:</p>
+
+<pre><code>
+from arabic_reshaper import reshape
+from bidi.algorithm import get_display
+label = get_display(reshape(arabic_text))
+</code></pre>
+
+<p>It is in a thousand StackOverflow answers. GitHub&#x27;s public code index has <strong>1,180 files</strong> containing <code>get_display(arabic_reshaper.reshape</code>, and <strong>4,024</strong> that call <code>arabic_reshaper.reshape</code> at all. The package is downloaded millions of times a month.</p>
+
+<p>In matplotlib 3.11 it renders the text backwards.</p>
+
+<p>Not with an error. Not with a warning. The label appears, the glyphs are Arabic, the characters connect. If you do not read Arabic it looks completely fine — and that is the entire problem. Every other kind of text bug announces itself with tofu boxes or a traceback. This one produces something that looks like a language.</p>
+
+<h2>What changed</h2>
+
+<p>matplotlib merged <strong>#30000, &quot;Implement text shaping with libraqm&quot;</strong>, in September 2025. From 3.11, matplotlib shapes and reorders Arabic itself.</p>
+
+<p>So the old recipe now runs twice. <code>reshape()</code> converts the string to presentation forms and <code>get_display()</code> puts it into visual order — then matplotlib applies the bidi algorithm to a string that is already visual, and reverses it.</p>
+
+<p>The workaround did not become unnecessary. It became <strong>harmful</strong>.</p>
+
+<p>Measured as mean absolute pixel difference against a Pillow/Raqm render of the same string in the same font, crops normalised to 64px:</p>
+
+<table><tr><th>input</th><th>mean abs diff</th></tr>
+<tr><td>raw logical string</td><td><strong>7.75</strong> (antialiasing only — correct)</td></tr>
+<tr><td>pre-shaped with the recipe</td><td><strong>76.28</strong> (reversed)</td></tr>
+</table>
+
+<p>And <code>arabic_reshaper</code> appears <strong>nowhere in the matplotlib repository</strong>, so nothing tells someone upgrading that the line they copied in 2019 is now doing damage.</p>
+
+<h2>Two things that are not the same</h2>
+
+<p>Worth separating, because it decides whether tooling can save you:</p>
+
+<p><strong>Shaping is detectable.</strong> <code>reshape()</code> emits characters from Unicode&#x27;s Arabic Presentation Forms blocks — legacy compatibility ranges that typed Arabic never uses. Over 1,856 sampled strings it produced <strong>122 distinct Forms-B codepoints</strong>. Forms-A shows up only for specific sequences: &quot;الله&quot; collapses to the single codepoint U+FDF2, and two Uighur alef forms appear. So a linter can spot a pre-shaped string with near-certainty.</p>
+
+<p><strong>Reordering is not.</strong> <code>get_display()</code> reverses the order of the same codepoints. A reversed string and a correct one contain exactly the same characters. There is no general detector, because there is nothing to detect — only a human who reads the language can tell you which way round it goes.</p>
+
+<p>That asymmetry is why &quot;just add a check&quot; does not work, and why this survived years of being copied.</p>
+
+<h2>What happened upstream</h2>
+
+<p>I filed it. Two projects, two different outcomes, both better than I expected.</p>
+
+<p><strong>Pillow</strong> — the same class of problem, different mechanism: Pillow&#x27;s behaviour depends on whether it was built with Raqm, so the identical script produces correct text on one machine and broken text on another. On a Raqm-enabled build I measured 15 Arabic strings: <strong>0 of 15</strong> render the same once the recipe is applied. Every one is changed by a line that is supposed to be a no-op at worst. The maintainer pushed back hard on my first draft, correctly, for overclaiming a security angle. I dropped it. The warning that remains is narrower and true.</p>
+
+<p><strong>matplotlib</strong> — three maintainers replied within two days, including the project lead. One of them, <code>rcomer</code>, went and <strong>edited the StackOverflow answers herself</strong> to say the workaround is only for older versions. That is by far the widest-reaching result of any of this, and it cost nothing but filing accurately.</p>
+
+<p>The project lead proposed a fix I had not thought of: wrap pre-processed text in Unicode LRO/PDF (U+202D / U+202C), which renders correctly on every matplotlib version. He said he did not know enough Arabic to be sure it was right. I could check, so I did — across three fonts and nine strings. It reads correctly in all of them. It does not always <em>render</em> identically: the wrapped string draws the font&#x27;s static presentation forms rather than the font&#x27;s own shaping, so joins loosen and the line widens where those differ. Arial Unicode was unaffected; Geeza Pro differed on every string tested.</p>
+
+<p>That exchange is the whole argument for filing upstream rather than writing a blog post first. He had the better fix. I had the only way to verify it.</p>
+
+<h2>If you draw Arabic in Python</h2>
+
+<ul><li><strong>matplotlib ≥ 3.11</strong>: pass the logical string. Delete the reshape/bidi line.</li>
+<li><strong>matplotlib &lt; 3.11</strong>: keep it, or use the LRO/PDF wrap, which works on both.</li>
+<li><strong>Pillow</strong>: check <code>features.check(&quot;raqm&quot;)</code>. If it is False you have a different problem</li>
+</ul><p>  and the recipe will not fully save you.</p>
+<ul><li>Either way, get someone who reads the script to look at the output once. No test you can</li>
+</ul><p>  write will tell you the text came out backwards.</p>
+
+<p>---</p>
+<footer>
+The linter is <a href="https://github.com/Syamjith-NK/arabic-lint">arabic-lint</a>.
+The upstream threads are <a href="https://github.com/python-pillow/Pillow/pull/9925">Pillow #9925</a>
+and <a href="https://github.com/matplotlib/matplotlib/issues/32262">matplotlib #32262</a>.
+</footer>
+</div></body></html>
