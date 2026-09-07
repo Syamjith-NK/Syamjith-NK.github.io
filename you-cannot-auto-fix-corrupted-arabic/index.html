@@ -1,0 +1,105 @@
+<!doctype html>
+<html lang="en"><head><meta charset="utf-8">
+<meta name="viewport" content="width=device-width,initial-scale=1">
+<title>The auto-fix for corrupted Arabic produces a real word — the wrong one — Syamjith NK</title>
+<meta name="description" content="Reversing reshape+bidi corruption round-trips exactly, until the text contains a lam-alef ligature. Then it silently produces a different real word.">
+<meta property="og:title" content="The auto-fix for corrupted Arabic produces a real word — the wrong one">
+<meta property="og:description" content="Reversing reshape+bidi corruption round-trips exactly, until the text contains a lam-alef ligature. Then it silently produces a different real word.">
+<meta property="og:type" content="article">
+<style>
+:root{ --ink:#16181d; --ink-2:#3f454d; --ink-3:#767d87; --line:#e3e6ea; --bg:#fbfbfa; --link:#0b5cd5; --code:#f2f3f5; }
+@media (prefers-color-scheme:dark){
+  :root{ --ink:#e8eaed; --ink-2:#b9c0c9; --ink-3:#767d87; --line:#282c33; --bg:#14161a; --link:#79aaff; --code:#1c1f25; }
+}
+*{box-sizing:border-box}
+body{margin:0;background:var(--bg);color:var(--ink);
+ font:17.5px/1.7 -apple-system,BlinkMacSystemFont,"Segoe UI",Inter,system-ui,sans-serif;-webkit-font-smoothing:antialiased}
+.wrap{max-width:44rem;margin:0 auto;padding:clamp(28px,6vw,72px) clamp(20px,5vw,32px)}
+a{color:var(--link)}
+.back{font-size:14px;color:var(--ink-3);text-decoration:none}
+h1{font-size:clamp(28px,4.4vw,38px);line-height:1.18;letter-spacing:-.022em;margin:26px 0 10px}
+h2{font-size:21px;letter-spacing:-.012em;margin:44px 0 12px}
+.date{color:var(--ink-3);font-size:14.5px;margin:0 0 6px}
+p{color:var(--ink-2);margin:0 0 19px}
+strong{color:var(--ink)}
+code{background:var(--code);padding:.12em .34em;border-radius:4px;font-size:.9em;
+ font-family:ui-monospace,SFMono-Regular,Menlo,"Noto Naskh Arabic","Geeza Pro","Arial Unicode MS",monospace}
+pre{background:var(--code);padding:16px 18px;border-radius:8px;overflow-x:auto;margin:0 0 20px}
+pre code{background:none;padding:0;font-size:14px;line-height:1.55}
+pre code, code{font-variant-ligatures:none}
+.ar{font-family:"Noto Naskh Arabic","Geeza Pro","Arial Unicode MS",serif;font-size:1.12em}
+table{border-collapse:collapse;width:100%;margin:0 0 22px;font-size:15.5px}
+th,td{text-align:left;padding:9px 12px;border-bottom:1px solid var(--line)}
+th{color:var(--ink-3);font-weight:600;font-size:13px;text-transform:uppercase;letter-spacing:.05em}
+ul{color:var(--ink-2);padding-left:22px;margin:0 0 19px}
+li{margin:0 0 8px}
+footer{margin-top:52px;padding-top:22px;border-top:1px solid var(--line);color:var(--ink-3);font-size:14.5px}
+</style></head>
+<body><div class="wrap">
+<a class="back" href="/">&larr; Syamjith NK</a>
+<p class="date" style="margin-top:26px">7 September 2026</p>
+<h1>The auto-fix for corrupted Arabic produces a real word. The wrong one.</h1>
+
+<p>Once you know that <code>get_display(reshape(text))</code> corrupts Arabic on a stack that already shapes, the next thought is obvious and it is the one I had: <em>fine, I will just undo it.</em></p>
+
+<p>The corruption is mechanical. Reshaping maps letters to Unicode&#x27;s Arabic Presentation Forms; the bidi pass reverses the order. Both look invertible. Normalise the presentation forms back with NFKC, reverse the string, done.</p>
+
+<p>It round-trips exactly. I tested it on a lot of text and it round-trips exactly &mdash; <strong>until the text contains a lam-alef.</strong></p>
+
+<h2>One codepoint, two letters</h2>
+
+<p>Arabic has four lam-alef ligatures &mdash; <span class="ar">لا لأ لإ لآ</span> &mdash; where the letter lam followed by alef is encoded as a <em>single</em> codepoint rather than two.</p>
+
+<p>That single codepoint is what breaks the inverse. NFKC expands it back into its two constituent letters <strong>in logical order</strong>, while every character around it is still sitting in visual order from the reversal. So the pair comes out correct with respect to itself and backwards with respect to its neighbours.</p>
+
+<p>The result is not garbage. That is the whole problem.</p>
+
+<table><tr><th>original</th><th>after the naive fix</th><th></th></tr>
+<tr><td><span class="ar">الإمارات</span></td><td><span class="ar">اإلمارات</span></td><td>not a word &mdash; someone will notice</td></tr>
+<tr><td><span class="ar">السلام</span></td><td><span class="ar">السالم</span></td><td><strong>a real word. A different one.</strong></td></tr>
+</table>
+
+<p>The second row is the dangerous one. <span class="ar">السلام</span> is &quot;the peace&quot;. <span class="ar">السالم</span> is a real, well-formed Arabic word, and it is not that. It passes a spell check. It survives a human proofread, because a proofreader reads for sense and it makes a kind of sense. And it silently breaks anything downstream that does exact matching &mdash; search, deduplication, compliance scans, a lookup against a list of names.</p>
+
+<p>This is not a corner case. <span class="ar">ال</span> is the definite article; alef is the commonest letter in the language. &quot;Definite article followed by alef&quot; is one of the most frequent sequences in written Arabic. Any real corpus is full of it.</p>
+
+<h2>So the tool reports and never rewrites</h2>
+
+<p>I wrote <a href="https://github.com/Syamjith-NK/arabic-lint">arabic-lint</a> to find this class of corruption &mdash; Arabic that was mangled <em>before it was stored</em>, written back into JSON, localisation files, CSV exports and source, where every later render faithfully reproduces the damage.</p>
+
+<pre><code>pip install arabic-lint
+arabic-lint ./locales
+</code></pre>
+
+<p>Zero dependencies, exits non-zero on findings, drops into CI. And it deliberately has no <code>--fix</code>.</p>
+
+<p>That was a choice, not an omission. A fixer that is correct 95% of the time and silently produces a plausible wrong word the other 5% is worse than no fixer, because it converts a visible problem into an invisible one. The only safe repair is to go back to the source that was corrupted and re-export it.</p>
+
+<h2>What real data taught me that unit tests did not</h2>
+
+<p>The detector looks for Presentation Forms-B characters in stored text, on the reasoning that typed Arabic never uses those legacy compatibility ranges. My unit tests all passed.</p>
+
+<p>Then I ran it across <strong>3,826 real files</strong> and it found two categories of false positive I would never have invented:</p>
+
+<ul>
+<li>Files that legitimately <em>document</em> presentation forms &mdash; font tooling, Unicode tables, my own test fixtures. The characters are the subject matter, not corruption.</li>
+<li>Text where a single presentation form appears in isolation, without the surrounding run that real reshaping always produces.</li>
+</ul>
+
+<p>Both are now regression tests. The general lesson has cost me more than once: <strong>a detector that has only ever seen data you wrote is a detector you have not tested.</strong> Point it at a large pile of real files before you believe it.</p>
+
+<h2>If you handle stored Arabic</h2>
+
+<ul>
+<li>Assume some of it is already corrupted &mdash; the recipe has been copied for a decade.</li>
+<li>Scan for it, in CI, on every commit that touches localisation or exports.</li>
+<li>Do not auto-repair. Re-export from whatever produced it.</li>
+<li>Treat any &quot;fix&quot; that changes text without a human reading the result as a bug in waiting.</li>
+</ul>
+
+<footer>
+The linter is <a href="https://github.com/Syamjith-NK/arabic-lint">arabic-lint</a>, MIT.
+Related: <a href="/arabic-reshape-bidi-is-now-the-bug/">the recipe that causes this</a> and
+<a href="/raqm-is-a-runtime-property/">why your Pillow version cannot tell you if you are affected</a>.
+</footer>
+</div></body></html>

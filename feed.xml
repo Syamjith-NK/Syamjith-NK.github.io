@@ -1,0 +1,28 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<rss version="2.0"><channel>
+<title>Syamjith NK</title>
+<link>https://syamjith-nk.github.io/</link>
+<description>Measured notes on Arabic text handling, and the upstream fixes that came out of them.</description>
+<language>en</language>
+<item>
+  <title>The auto-fix for corrupted Arabic produces a real word. The wrong one.</title>
+  <link>https://syamjith-nk.github.io/you-cannot-auto-fix-corrupted-arabic/</link>
+  <guid>https://syamjith-nk.github.io/you-cannot-auto-fix-corrupted-arabic/</guid>
+  <pubDate>Sun, 07 Sep 2026 00:00:00 +0000</pubDate>
+  <description>Undoing reshape+bidi corruption round-trips exactly, until the text contains a lam-alef ligature.</description>
+</item>
+<item>
+  <title>Your Pillow version does not tell you whether Arabic will work</title>
+  <link>https://syamjith-nk.github.io/raqm-is-a-runtime-property/</link>
+  <guid>https://syamjith-nk.github.io/raqm-is-a-runtime-property/</guid>
+  <pubDate>Sun, 07 Sep 2026 00:00:00 +0000</pubDate>
+  <description>Shaping support is decided when the wheel is built, not by the version number.</description>
+</item>
+<item>
+  <title>The Arabic fix everyone recommends is now the bug</title>
+  <link>https://syamjith-nk.github.io/arabic-reshape-bidi-is-now-the-bug/</link>
+  <guid>https://syamjith-nk.github.io/arabic-reshape-bidi-is-now-the-bug/</guid>
+  <pubDate>Thu, 03 Sep 2026 00:00:00 +0000</pubDate>
+  <description>The most-copied recipe for rendering Arabic in Python reverses your text on matplotlib 3.11.</description>
+</item>
+</channel></rss>

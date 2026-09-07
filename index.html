@@ -39,6 +39,20 @@ footer{margin-top:46px;color:var(--ink-3);font-size:14px}
 
 <ul class="posts">
   <li>
+    <a href="/you-cannot-auto-fix-corrupted-arabic/">The auto-fix for corrupted Arabic produces a real word. The wrong one.</a>
+    <span class="meta">7 September 2026</span>
+    <p class="dek">Undoing reshape+bidi corruption round-trips exactly, until the text contains a
+      lam-alef ligature. Then <span dir="rtl">السلام</span> comes back as <span dir="rtl">السالم</span> &mdash;
+      a real word, a different word, one that survives a proofread.</p>
+  </li>
+  <li>
+    <a href="/raqm-is-a-runtime-property/">Your Pillow version does not tell you whether Arabic will work</a>
+    <span class="meta">7 September 2026</span>
+    <p class="dek">Shaping support is decided when the wheel is built, not by the version number.
+      The same Pillow renders Arabic correctly on one machine and broken on another, and the
+      correct code differs between them.</p>
+  </li>
+  <li>
     <a href="/arabic-reshape-bidi-is-now-the-bug/">The Arabic fix everyone recommends is now the bug</a>
     <span class="meta">3 September 2026</span>
     <p class="dek">The most-copied recipe for rendering Arabic in Python reverses your text on

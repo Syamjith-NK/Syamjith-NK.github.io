@@ -99,15 +99,15 @@ label = get_display(reshape(arabic_text))
 
 <ul><li><strong>matplotlib ≥ 3.11</strong>: pass the logical string. Delete the reshape/bidi line.</li>
 <li><strong>matplotlib &lt; 3.11</strong>: keep it, or use the LRO/PDF wrap, which works on both.</li>
-<li><strong>Pillow</strong>: check <code>features.check(&quot;raqm&quot;)</code>. If it is False you have a different problem</li>
-</ul><p>  and the recipe will not fully save you.</p>
-<ul><li>Either way, get someone who reads the script to look at the output once. No test you can</li>
-</ul><p>  write will tell you the text came out backwards.</p>
-
-<p>---</p>
+<li><strong>Pillow</strong>: check <code>features.check(&quot;raqm&quot;)</code> <a href="/raqm-is-a-runtime-property/">in the environment that renders</a>. If it is False you have a different problem, and the recipe will not fully save you.</li>
+<li>Either way, get someone who reads the script to look at the output once. No test you can write will tell you the text came out backwards.</li>
+</ul>
 <footer>
 The linter is <a href="https://github.com/Syamjith-NK/arabic-lint">arabic-lint</a>.
 The upstream threads are <a href="https://github.com/python-pillow/Pillow/pull/9925">Pillow #9925</a>
 and <a href="https://github.com/matplotlib/matplotlib/issues/32262">matplotlib #32262</a>.
+<br><strong>Update, 4 September 2026:</strong> the matplotlib change is
+<a href="https://github.com/matplotlib/matplotlib/pull/32263">merged</a> &mdash; the upgrade guide now
+tells 3.11 upgraders to remove the workaround.
 </footer>
 </div></body></html>

@@ -1,0 +1,104 @@
+<!doctype html>
+<html lang="en"><head><meta charset="utf-8">
+<meta name="viewport" content="width=device-width,initial-scale=1">
+<title>Your Pillow version does not tell you whether Arabic will work — Syamjith NK</title>
+<meta name="description" content="Whether Pillow shapes Arabic is decided at build time, not by the version number. The same wheel answers both ways on two machines.">
+<meta property="og:title" content="Your Pillow version does not tell you whether Arabic will work">
+<meta property="og:description" content="Whether Pillow shapes Arabic is decided at build time, not by the version number. The same wheel answers both ways on two machines.">
+<meta property="og:type" content="article">
+<style>
+:root{ --ink:#16181d; --ink-2:#3f454d; --ink-3:#767d87; --line:#e3e6ea; --bg:#fbfbfa; --link:#0b5cd5; --code:#f2f3f5; }
+@media (prefers-color-scheme:dark){
+  :root{ --ink:#e8eaed; --ink-2:#b9c0c9; --ink-3:#767d87; --line:#282c33; --bg:#14161a; --link:#79aaff; --code:#1c1f25; }
+}
+*{box-sizing:border-box}
+body{margin:0;background:var(--bg);color:var(--ink);
+ font:17.5px/1.7 -apple-system,BlinkMacSystemFont,"Segoe UI",Inter,system-ui,sans-serif;-webkit-font-smoothing:antialiased}
+.wrap{max-width:44rem;margin:0 auto;padding:clamp(28px,6vw,72px) clamp(20px,5vw,32px)}
+a{color:var(--link)}
+.back{font-size:14px;color:var(--ink-3);text-decoration:none}
+h1{font-size:clamp(28px,4.4vw,38px);line-height:1.18;letter-spacing:-.022em;margin:26px 0 10px}
+h2{font-size:21px;letter-spacing:-.012em;margin:44px 0 12px}
+.date{color:var(--ink-3);font-size:14.5px;margin:0 0 6px}
+p{color:var(--ink-2);margin:0 0 19px}
+strong{color:var(--ink)}
+code{background:var(--code);padding:.12em .34em;border-radius:4px;font-size:.9em;
+ font-family:ui-monospace,SFMono-Regular,Menlo,"Noto Naskh Arabic","Geeza Pro","Arial Unicode MS",monospace}
+pre{background:var(--code);padding:16px 18px;border-radius:8px;overflow-x:auto;margin:0 0 20px}
+pre code{background:none;padding:0;font-size:14px;line-height:1.55}
+pre code, code{font-variant-ligatures:none}
+table{border-collapse:collapse;width:100%;margin:0 0 22px;font-size:15.5px}
+th,td{text-align:left;padding:9px 12px;border-bottom:1px solid var(--line)}
+th{color:var(--ink-3);font-weight:600;font-size:13px;text-transform:uppercase;letter-spacing:.05em}
+ul{color:var(--ink-2);padding-left:22px;margin:0 0 19px}
+li{margin:0 0 8px}
+footer{margin-top:52px;padding-top:22px;border-top:1px solid var(--line);color:var(--ink-3);font-size:14.5px}
+</style></head>
+<body><div class="wrap">
+<a class="back" href="/">&larr; Syamjith NK</a>
+<p class="date" style="margin-top:26px">7 September 2026</p>
+<h1>Your Pillow version does not tell you whether Arabic will work</h1>
+
+<p>Here is a bug report I have now written a version of three times, and read versions of many more:</p>
+
+<p><em>&quot;Arabic renders correctly on my machine and comes out broken in CI. Same code. Same Pillow version. Same font file.&quot;</em></p>
+
+<p>The instinct is to suspect the font, then the encoding, then something exotic about the container. It is none of those. It is that <strong>the thing which decides whether Pillow shapes Arabic is not in the Python package at all.</strong></p>
+
+<h2>What actually decides it</h2>
+
+<p>Pillow can lay out complex scripts &mdash; Arabic, Hebrew, Indic &mdash; only when it was <strong>compiled against libraqm</strong>. Raqm is a C library that wraps HarfBuzz and FriBidi; it does the joining and the bidirectional reordering that Arabic requires.</p>
+
+<p>That linkage is decided when the wheel is built, on the machine that built it, according to which system libraries were present. It is not a Pillow feature flag, it is not a version, and it is not something <code>pip</code> resolves for you.</p>
+
+<p>So <code>pillow==11.0.0</code> is not one behaviour. It is two, and the version number cannot distinguish them.</p>
+
+<table><tr><th>environment</th><th>same wheel, same code</th></tr>
+<tr><td>Raqm present</td><td>Arabic joins and reorders correctly</td></tr>
+<tr><td>Raqm absent</td><td>letters drawn in isolated forms, logical order</td></tr>
+</table>
+
+<p>Both produce an image. Neither raises. If you do not read Arabic, both look like Arabic.</p>
+
+<h2>The one line that answers it</h2>
+
+<pre><code>from PIL import features
+features.check("raqm")   # True or False, in THIS environment
+</code></pre>
+
+<p>The important word is <em>this</em>. Not the environment you developed in, not the one in your lockfile, not the one the docs were written against. <strong>Run it in the process that actually draws the image</strong>, and print it in your logs. A Docker base image change, a switch from a manylinux wheel to a source build, a different CI runner, a colleague on a Mac &mdash; any of those can flip it, and none of them touch a line of your code.</p>
+
+<h2>Why this compounds into a real bug</h2>
+
+<p>On its own, a missing Raqm gives you visibly disconnected Arabic. Someone who reads the language spots it in a second. The trouble starts when it meets the other Arabic trap: the <code>arabic_reshaper</code> + <code>python-bidi</code> pre-processing recipe that <a href="/arabic-reshape-bidi-is-now-the-bug/">every tutorial still recommends</a>.</p>
+
+<p>Those two facts point in <em>opposite</em> directions:</p>
+
+<ul>
+<li><strong>Without Raqm</strong>, the recipe is doing necessary work. Remove it and the text falls apart.</li>
+<li><strong>With Raqm</strong>, the recipe corrupts. I measured 15 Arabic strings on a Raqm-enabled build: <strong>0 of 15</strong> render identically once the recipe is applied. Every single one is altered by a line that is supposed to be, at worst, a no-op.</li>
+</ul>
+
+<p>So the correct code depends on a property of the machine, and the failure modes are mirror images. That is why &quot;works on my machine&quot; is not lazy shorthand here &mdash; it is a precise and complete description of the bug.</p>
+
+<h2>What I filed</h2>
+
+<p>Pillow <a href="https://github.com/python-pillow/Pillow/pull/9925">#9925</a> adds a run-time warning when pre-shaped text is handed to a Raqm-enabled build, and documents that the layout engine is a build-time decision rather than a version.</p>
+
+<p>My first draft was worse than what is there now. I framed part of it as a security concern, and the maintainer pushed back on that &mdash; correctly. I dropped it. What remains is narrower and true, which is the only useful kind of bug report.</p>
+
+<h2>If you draw Arabic in Python</h2>
+
+<ul>
+<li>Print <code>PIL.features.check(&quot;raqm&quot;)</code> from the process that renders, and put it in your logs.</li>
+<li>Never infer shaping support from a version number or a lockfile.</li>
+<li>Branch your pre-processing on that value, not on your memory of how the last project worked.</li>
+<li>Pin the base image, not just the package &mdash; the base image is where the answer actually lives.</li>
+<li>Have someone who reads the script look at the rendered output once. No assertion you can write will tell you the text came out backwards.</li>
+</ul>
+
+<footer>
+The linter is <a href="https://github.com/Syamjith-NK/arabic-lint">arabic-lint</a>.
+The upstream thread is <a href="https://github.com/python-pillow/Pillow/pull/9925">Pillow&nbsp;#9925</a>.
+</footer>
+</div></body></html>
