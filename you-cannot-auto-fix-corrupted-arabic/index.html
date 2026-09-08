@@ -34,10 +34,65 @@ th{color:var(--ink-3);font-weight:600;font-size:13px;text-transform:uppercase;le
 ul{color:var(--ink-2);padding-left:22px;margin:0 0 19px}
 li{margin:0 0 8px}
 footer{margin-top:52px;padding-top:22px;border-top:1px solid var(--line);color:var(--ink-3);font-size:14.5px}
-</style></head>
+</style><meta name="author" content="Syamjith NK">
+<link rel="canonical" href="https://syamjith-nk.github.io/you-cannot-auto-fix-corrupted-arabic/">
+<link rel="me" href="https://syamjithnk.com">
+<link rel="me" href="https://github.com/Syamjith-NK">
+<meta property="og:url" content="https://syamjith-nk.github.io/you-cannot-auto-fix-corrupted-arabic/">
+<meta property="article:author" content="Syamjith NK">
+<script type="application/ld+json">
+{
+ "@context": "https://schema.org",
+ "@type": "BlogPosting",
+ "headline": "The auto-fix for corrupted Arabic produces a real word",
+ "description": "Reversing reshape+bidi corruption round-trips exactly, until the text contains a lam-alef ligature. Then it silently produces a different real word.",
+ "url": "https://syamjith-nk.github.io/you-cannot-auto-fix-corrupted-arabic/",
+ "mainEntityOfPage": {
+  "@type": "WebPage",
+  "@id": "https://syamjith-nk.github.io/you-cannot-auto-fix-corrupted-arabic/"
+ },
+ "datePublished": "2026-09-07",
+ "dateModified": "2026-09-07",
+ "inLanguage": "en",
+ "author": {
+  "@type": "Person",
+  "name": "Syamjith NK",
+  "url": "https://syamjithnk.com",
+  "jobTitle": "Cinematographer and AI creative technologist",
+  "sameAs": [
+   "https://syamjithnk.com",
+   "https://github.com/Syamjith-NK",
+   "https://huggingface.co/syamjithnk",
+   "https://pypi.org/project/arabic-lint/",
+   "https://pypi.org/project/arabic-tts-frontend/",
+   "https://stackoverflow.com/users/33097750/syamjith-nk"
+  ]
+ },
+ "publisher": {
+  "@type": "Person",
+  "name": "Syamjith NK",
+  "url": "https://syamjithnk.com",
+  "jobTitle": "Cinematographer and AI creative technologist",
+  "sameAs": [
+   "https://syamjithnk.com",
+   "https://github.com/Syamjith-NK",
+   "https://huggingface.co/syamjithnk",
+   "https://pypi.org/project/arabic-lint/",
+   "https://pypi.org/project/arabic-tts-frontend/",
+   "https://stackoverflow.com/users/33097750/syamjith-nk"
+  ]
+ },
+ "isPartOf": {
+  "@type": "Blog",
+  "name": "Syamjith NK — writing",
+  "url": "https://syamjith-nk.github.io/"
+ }
+}
+</script>
+</head>
 <body><div class="wrap">
 <a class="back" href="/">&larr; Syamjith NK</a>
-<p class="date" style="margin-top:26px">7 September 2026</p>
+<p class="date" style="margin-top:26px">7 September 2026 &middot; Syamjith NK</p>
 <h1>The auto-fix for corrupted Arabic produces a real word. The wrong one.</h1>
 
 <p>Once you know that <code>get_display(reshape(text))</code> corrupts Arabic on a stack that already shapes, the next thought is obvious and it is the one I had: <em>fine, I will just undo it.</em></p>
@@ -101,5 +156,6 @@ arabic-lint ./locales
 The linter is <a href="https://github.com/Syamjith-NK/arabic-lint">arabic-lint</a>, MIT.
 Related: <a href="/arabic-reshape-bidi-is-now-the-bug/">the recipe that causes this</a> and
 <a href="/raqm-is-a-runtime-property/">why your Pillow version cannot tell you if you are affected</a>.
+<br>Written by <a rel="author me" href="https://syamjithnk.com">Syamjith NK</a>. The research, the measurements and the upstream patches behind this post are at <a href="https://syamjithnk.com/evidence">syamjithnk.com/evidence</a>.
 </footer>
 </div></body></html>
