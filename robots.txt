@@ -1,0 +1,4 @@
+User-agent: *
+Allow: /
+
+Sitemap: https://syamjith-nk.github.io/sitemap.xml
