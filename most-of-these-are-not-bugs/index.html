@@ -1,0 +1,200 @@
+<!doctype html>
+<html lang="en"><head><meta charset="utf-8">
+<meta name="viewport" content="width=device-width,initial-scale=1">
+<title>3,168 files use the broken Arabic recipe. Most of them are fine. — Syamjith NK</title>
+<meta name="description" content="A code search finds the reshape+bidi recipe in thousands of Python files. Whether it is a bug depends entirely on what draws the text, so I read six of them.">
+<meta property="og:title" content="3,168 files use the broken Arabic recipe. Most of them are fine.">
+<meta property="og:description" content="A code search finds the reshape+bidi recipe in thousands of Python files. Whether it is a bug depends entirely on what draws the text, so I read six of them.">
+<meta property="og:type" content="article">
+<style>
+:root{ --ink:#16181d; --ink-2:#3f454d; --ink-3:#767d87; --line:#e3e6ea; --bg:#fbfbfa; --link:#0b5cd5; --code:#f2f3f5; }
+@media (prefers-color-scheme:dark){
+  :root{ --ink:#e8eaed; --ink-2:#b9c0c9; --ink-3:#767d87; --line:#282c33; --bg:#14161a; --link:#79aaff; --code:#1c1f25; }
+}
+*{box-sizing:border-box}
+body{margin:0;background:var(--bg);color:var(--ink);
+ font:17.5px/1.7 -apple-system,BlinkMacSystemFont,"Segoe UI",Inter,system-ui,sans-serif;-webkit-font-smoothing:antialiased}
+.wrap{max-width:44rem;margin:0 auto;padding:clamp(28px,6vw,72px) clamp(20px,5vw,32px)}
+a{color:var(--link)}
+.back{font-size:14px;color:var(--ink-3);text-decoration:none}
+h1{font-size:clamp(28px,4.4vw,38px);line-height:1.18;letter-spacing:-.022em;margin:26px 0 10px}
+h2{font-size:21px;letter-spacing:-.012em;margin:44px 0 12px}
+.date{color:var(--ink-3);font-size:14.5px;margin:0 0 6px}
+p{color:var(--ink-2);margin:0 0 19px}
+strong{color:var(--ink)}
+code{background:var(--code);padding:.12em .34em;border-radius:4px;font-size:.9em;
+ font-family:ui-monospace,SFMono-Regular,Menlo,"Noto Naskh Arabic","Geeza Pro","Arial Unicode MS",monospace}
+pre{background:var(--code);padding:16px 18px;border-radius:8px;overflow-x:auto;margin:0 0 20px}
+pre code{background:none;padding:0;font-size:14px;line-height:1.55}
+pre code, code{font-variant-ligatures:none}
+table{border-collapse:collapse;width:100%;margin:0 0 22px;font-size:15.5px}
+th,td{text-align:left;padding:9px 12px;border-bottom:1px solid var(--line)}
+th{color:var(--ink-3);font-weight:600;font-size:13px;text-transform:uppercase;letter-spacing:.05em}
+ul{color:var(--ink-2);padding-left:22px;margin:0 0 19px}
+li{margin:0 0 8px}
+footer{margin-top:52px;padding-top:22px;border-top:1px solid var(--line);color:var(--ink-3);font-size:14.5px}
+</style><meta name="author" content="Syamjith NK">
+<link rel="canonical" href="https://syamjith-nk.github.io/most-of-these-are-not-bugs/">
+<link rel="me" href="https://syamjithnk.com">
+<link rel="me" href="https://github.com/Syamjith-NK">
+<meta property="og:url" content="https://syamjith-nk.github.io/most-of-these-are-not-bugs/">
+<meta property="article:author" content="Syamjith NK">
+<script type="application/ld+json">
+{
+ "@context": "https://schema.org",
+ "@type": "BlogPosting",
+ "headline": "3,168 files use the broken Arabic recipe. Most of them are fine.",
+ "description": "A code search finds the reshape+bidi recipe in thousands of Python files. Whether it is a bug depends entirely on what draws the text, so I read six of them.",
+ "url": "https://syamjith-nk.github.io/most-of-these-are-not-bugs/",
+ "mainEntityOfPage": {
+  "@type": "WebPage",
+  "@id": "https://syamjith-nk.github.io/most-of-these-are-not-bugs/"
+ },
+ "datePublished": "2026-09-08",
+ "dateModified": "2026-09-08",
+ "inLanguage": "en",
+ "author": {
+  "@type": "Person",
+  "name": "Syamjith NK",
+  "url": "https://syamjithnk.com",
+  "jobTitle": "Cinematographer and AI creative technologist",
+  "sameAs": [
+   "https://syamjithnk.com",
+   "https://github.com/Syamjith-NK",
+   "https://huggingface.co/syamjithnk",
+   "https://pypi.org/project/arabic-lint/",
+   "https://pypi.org/project/arabic-tts-frontend/",
+   "https://stackoverflow.com/users/33097750/syamjith-nk"
+  ]
+ },
+ "publisher": {
+  "@type": "Person",
+  "name": "Syamjith NK",
+  "url": "https://syamjithnk.com",
+  "jobTitle": "Cinematographer and AI creative technologist",
+  "sameAs": [
+   "https://syamjithnk.com",
+   "https://github.com/Syamjith-NK",
+   "https://huggingface.co/syamjithnk",
+   "https://pypi.org/project/arabic-lint/",
+   "https://pypi.org/project/arabic-tts-frontend/",
+   "https://stackoverflow.com/users/33097750/syamjith-nk"
+  ]
+ },
+ "isPartOf": {
+  "@type": "Blog",
+  "name": "Syamjith NK — writing",
+  "url": "https://syamjith-nk.github.io/"
+ }
+}
+</script>
+</head>
+<body><div class="wrap">
+<a class="back" href="/">&larr; Syamjith NK</a>
+<p class="date" style="margin-top:26px">8 September 2026 &middot; Syamjith NK</p>
+<h1>3,168 files use the broken Arabic recipe. Most of them are fine.</h1>
+
+<p>Searching GitHub for <code>get_display arabic_reshaper.reshape language:python</code> returns
+<strong>3,168 files</strong>. On matplotlib 3.11 and on Pillow built with Raqm, that recipe
+reverses your text. It would be easy to conclude there are three thousand broken projects out
+there and start filing.</p>
+
+<p>That conclusion is wrong, and the reason it is wrong is the only interesting thing here.</p>
+
+<h2>The recipe is not a bug. Doing it twice is.</h2>
+
+<p><code>arabic_reshaper.reshape()</code> converts Arabic to presentation forms.
+<code>get_display()</code> puts the string into visual order. Together they do the work a text
+engine would do, which is exactly right if the thing that draws your text does not do it for you,
+and exactly wrong if it does.</p>
+
+<table>
+<thead><tr><th>renderer</th><th>shapes and reorders?</th><th>the recipe is</th></tr></thead>
+<tbody>
+<tr><td>matplotlib &ge; 3.11</td><td>yes</td><td><strong>a bug</strong></td></tr>
+<tr><td>matplotlib &lt; 3.11</td><td>no</td><td>required</td></tr>
+<tr><td>Pillow built with Raqm</td><td>yes</td><td><strong>a bug</strong></td></tr>
+<tr><td>Pillow without Raqm</td><td>no</td><td>required</td></tr>
+<tr><td>ReportLab, fpdf</td><td>no</td><td>required</td></tr>
+<tr><td><code>print()</code> to a terminal</td><td>terminal-dependent</td><td>not mine to judge</td></tr>
+</tbody>
+</table>
+
+<p>So the search result is not a list of bugs. It is a list of places where somebody has to look
+at what happens next.</p>
+
+<h2>I looked at six</h2>
+
+<p>Ranked by stars and recency, then read rather than pattern-matched. Three were genuinely
+broken:</p>
+
+<ul>
+<li>A Discord bot, actively maintained, whose helper carries the docstring
+<em>&ldquo;Shape Arabic for matplotlib (which doesn&rsquo;t run bidi itself)&rdquo;</em>. That was true
+for a decade. Its pin is <code>matplotlib&gt;=3.10.5</code> with no upper bound, so a fresh install
+resolves to 3.11 and every Arabic player name in its charts comes out backwards.</li>
+<li>A second bot, a sibling of the first, carrying the identical helper on the identical line.</li>
+<li>A ComfyUI node built specifically to render Persian and Arabic, drawing through Pillow with
+<code>Pillow</code> unpinned.</li>
+<li>An Arabic poetry dataset with no <code>requirements.txt</code> at all, so every chart label and
+title it draws is reversed on a current install.</li>
+</ul>
+
+<p>Three were not:</p>
+
+<ul>
+<li>A transcription tool that renders through <strong>ReportLab</strong>, which does no shaping.
+The recipe is correct there and removing it would break the output.</li>
+<li>An Arabic benchmark from a well-known lab where the helper is <strong>defined and never
+called</strong>. The import and the function are left over; the data is written untouched.</li>
+<li>An OCR demo that pre-shapes only for <code>print()</code>. Terminals vary, and this is a
+forty-line script.</li>
+</ul>
+
+<p>Two of the six matched the search and were fine. One matched, and the matching code does not
+execute. If I had filed on all six I would have been wrong half the time, and being wrong in
+public on someone else&rsquo;s repository is expensive in a way that being quiet is not.</p>
+
+<h2>What a useful checker has to do</h2>
+
+<p>I put this into <a href="https://pypi.org/project/arabic-lint/">arabic-lint 0.2.0</a>, and
+writing it taught me more than the search did. Every one of these came from testing against the
+six real files rather than snippets I made up:</p>
+
+<ul>
+<li><strong>Follow import aliases.</strong> Real code writes
+<code>from bidi.algorithm import get_display as _bidi_get_display</code>. A checker that only knows
+the canonical spelling passes the file in silence. This missed the first bot entirely.</li>
+<li><strong>Follow the recipe across statements.</strong> <code>reshape()</code> on one line and
+<code>get_display()</code> on the next is the common shape. Looking only inside the
+<code>get_display()</code> call missed the ComfyUI node.</li>
+<li><strong>Name the renderer that actually draws.</strong> A file that imports both Pillow and
+matplotlib, sorted alphabetically, blames Pillow for a matplotlib bug.</li>
+<li><strong>Require that something draws.</strong> Importing Pillow to load an image and then
+printing the Arabic is not a rendering bug.</li>
+<li><strong>Do not call a helper dead just because nothing in the file calls it.</strong> That is
+true of a script; it is false of a library module, where the caller is in another file. Getting
+this wrong means going quiet on a real bug, which is the more expensive mistake.</li>
+</ul>
+
+<p>The tool now stays silent on all three of the projects that are fine, and flags all three that
+are not.</p>
+
+<h2>The part worth keeping</h2>
+
+<p>A grep gives you 3,168 results and no judgement. The judgement is the work, and most of it is
+deciding what <em>not</em> to report. A checker that flagged all 3,168 would be switched off within
+a day, and rightly.</p>
+
+<p>The same is true of the search itself. Three thousand hits is not three thousand bugs; it is a
+population, and the interesting question is what fraction of it is actually broken. On a sample of
+six, it was half.</p>
+
+<footer>
+The tool is <a href="https://github.com/Syamjith-NK/arabic-lint">arabic-lint</a>
+(<code>pip install arabic-lint</code>).
+The upstream threads are <a href="https://github.com/matplotlib/matplotlib/pull/32263">matplotlib&nbsp;#32263</a>,
+merged, and <a href="https://github.com/python-pillow/Pillow/pull/9925">Pillow&nbsp;#9925</a>.
+<br>Written by <a rel="author me" href="https://syamjithnk.com">Syamjith NK</a>. The research, the measurements and the upstream patches behind this post are at <a href="https://syamjithnk.com/evidence">syamjithnk.com/evidence</a>.
+</footer>
+</div></body></html>

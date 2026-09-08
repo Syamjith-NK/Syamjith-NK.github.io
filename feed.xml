@@ -5,6 +5,13 @@
 <description>Measured notes on Arabic text handling, and the upstream fixes that came out of them.</description>
 <language>en</language>
 <item>
+  <title>3,168 files use the broken Arabic recipe. Most of them are fine.</title>
+  <link>https://syamjith-nk.github.io/most-of-these-are-not-bugs/</link>
+  <guid>https://syamjith-nk.github.io/most-of-these-are-not-bugs/</guid>
+  <pubDate>Tue, 08 Sep 2026 00:00:00 +0000</pubDate>
+  <description>Whether the reshape+bidi recipe is a bug depends on what draws the text. On a sample of six real projects, half were fine.</description>
+</item>
+<item>
   <title>The auto-fix for corrupted Arabic produces a real word. The wrong one.</title>
   <link>https://syamjith-nk.github.io/you-cannot-auto-fix-corrupted-arabic/</link>
   <guid>https://syamjith-nk.github.io/you-cannot-auto-fix-corrupted-arabic/</guid>
