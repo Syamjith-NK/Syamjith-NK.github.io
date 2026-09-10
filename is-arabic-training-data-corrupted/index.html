@@ -137,10 +137,30 @@ themselves.</p>
 
 <p>Twenty-one had any finding at all, and twenty of those were a <em>single</em> stray
 presentation form in otherwise correct text, most often <code>U+FE91</code> BEH INITIAL
-FORM. That is copy-paste out of a PDF, or OCR residue. It is still wrong, because a
-tokenizer treats <code>ﺑ</code> and <code>ب</code> as different tokens, so the same word
-splits into different vocabulary entries and exact-match lookup fails silently. But it is
-not the recipe.</p>
+FORM. That is copy-paste out of a PDF, or OCR residue, not the recipe.</p>
+
+<p><strong>I originally wrote that this "splits the word into different tokens". That was
+wrong, and I have since measured it. What actually happens is worse.</strong></p>
+
+<p>On a tokenizer with no Unicode normalisation step, the word is not split. It is replaced
+by the unknown token, so every character of meaning is discarded before the model sees
+anything. One corrupted letter out of four is enough: <span dir="rtl">بيت</span> becomes
+<code>[UNK]</code>.</p>
+
+<table>
+<thead><tr><th>tokenizer</th><th>one stray presentation form</th></tr></thead>
+<tbody>
+<tr><td><code>aubmindlab/bert-base-arabertv02</code> (Arabic-specific)</td><td><strong>6/6 words &rarr; <code>[UNK]</code></strong></td></tr>
+<tr><td><code>google-bert/bert-base-multilingual-cased</code></td><td><strong>6/6 words &rarr; <code>[UNK]</code></strong></td></tr>
+<tr><td><code>xlm-roberta-base</code> (SentencePiece)</td><td>0/6, identical tokens, unaffected</td></tr>
+<tr><td><code>Qwen/Qwen2.5-0.5B</code> (byte-level BPE)</td><td>survives, but as entirely different tokens</td></tr>
+</tbody>
+</table>
+
+<p>The two Arabic-capable BERTs destroy the word. The multilingual SentencePiece model does
+not, because it normalises and they do not. If you train Arabic models, that is the whole
+practical finding: <strong>normalise before you tokenise</strong>, and a stray glyph costs
+you nothing instead of costing you the word.</p>
 
 <p>One dataset was the recipe.</p>
 
