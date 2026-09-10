@@ -1,0 +1,198 @@
+<!doctype html>
+<html lang="en"><head><meta charset="utf-8">
+<meta name="viewport" content="width=device-width,initial-scale=1">
+<title>I scanned 341 Arabic datasets to see if the corruption reaches training data — Syamjith NK</title>
+<meta name="description" content="The reshape+bidi recipe is in 3,168 Python files. If it ran before a corpus was saved, models learned from broken Arabic. So I measured it.">
+<meta property="og:title" content="I scanned 341 Arabic datasets to see if the corruption reaches training data">
+<meta property="og:description" content="The reshape+bidi recipe is in 3,168 Python files. If it ran before a corpus was saved, models learned from broken Arabic. So I measured it.">
+<meta property="og:type" content="article">
+<style>
+:root{ --ink:#16181d; --ink-2:#3f454d; --ink-3:#767d87; --line:#e3e6ea; --bg:#fbfbfa; --link:#0b5cd5; --code:#f2f3f5; }
+@media (prefers-color-scheme:dark){
+  :root{ --ink:#e8eaed; --ink-2:#b9c0c9; --ink-3:#767d87; --line:#282c33; --bg:#14161a; --link:#79aaff; --code:#1c1f25; }
+}
+*{box-sizing:border-box}
+body{margin:0;background:var(--bg);color:var(--ink);
+ font:17.5px/1.7 -apple-system,BlinkMacSystemFont,"Segoe UI",Inter,system-ui,sans-serif;-webkit-font-smoothing:antialiased}
+.wrap{max-width:44rem;margin:0 auto;padding:clamp(28px,6vw,72px) clamp(20px,5vw,32px)}
+a{color:var(--link)}
+.back{font-size:14px;color:var(--ink-3);text-decoration:none}
+h1{font-size:clamp(28px,4.4vw,38px);line-height:1.18;letter-spacing:-.022em;margin:26px 0 10px}
+h2{font-size:21px;letter-spacing:-.012em;margin:44px 0 12px}
+.date{color:var(--ink-3);font-size:14.5px;margin:0 0 6px}
+p{color:var(--ink-2);margin:0 0 19px}
+strong{color:var(--ink)}
+code{background:var(--code);padding:.12em .34em;border-radius:4px;font-size:.9em;
+ font-family:ui-monospace,SFMono-Regular,Menlo,"Noto Naskh Arabic","Geeza Pro","Arial Unicode MS",monospace}
+pre{background:var(--code);padding:16px 18px;border-radius:8px;overflow-x:auto;margin:0 0 20px}
+pre code{background:none;padding:0;font-size:14px;line-height:1.55}
+pre code, code{font-variant-ligatures:none}
+table{border-collapse:collapse;width:100%;margin:0 0 22px;font-size:15.5px}
+th,td{text-align:left;padding:9px 12px;border-bottom:1px solid var(--line)}
+th{color:var(--ink-3);font-weight:600;font-size:13px;text-transform:uppercase;letter-spacing:.05em}
+ul{color:var(--ink-2);padding-left:22px;margin:0 0 19px}
+li{margin:0 0 8px}
+footer{margin-top:52px;padding-top:22px;border-top:1px solid var(--line);color:var(--ink-3);font-size:14.5px}
+</style><meta name="author" content="Syamjith NK">
+<link rel="canonical" href="https://syamjith-nk.github.io/is-arabic-training-data-corrupted/">
+<link rel="me" href="https://syamjithnk.com">
+<link rel="me" href="https://github.com/Syamjith-NK">
+<meta property="og:url" content="https://syamjith-nk.github.io/is-arabic-training-data-corrupted/">
+<meta property="article:author" content="Syamjith NK">
+<script type="application/ld+json">
+{
+ "@context": "https://schema.org",
+ "@type": "BlogPosting",
+ "headline": "I scanned 341 Arabic datasets to see if the corruption reaches training data",
+ "description": "The reshape+bidi recipe is in 3,168 Python files. If it ran before a corpus was saved, models learned from broken Arabic. So I measured it.",
+ "url": "https://syamjith-nk.github.io/is-arabic-training-data-corrupted/",
+ "mainEntityOfPage": {
+  "@type": "WebPage",
+  "@id": "https://syamjith-nk.github.io/is-arabic-training-data-corrupted/"
+ },
+ "datePublished": "2026-09-10",
+ "dateModified": "2026-09-10",
+ "inLanguage": "en",
+ "author": {
+  "@type": "Person",
+  "name": "Syamjith NK",
+  "url": "https://syamjithnk.com",
+  "jobTitle": "Cinematographer and AI creative technologist",
+  "sameAs": [
+   "https://syamjithnk.com",
+   "https://github.com/Syamjith-NK",
+   "https://huggingface.co/syamjithnk",
+   "https://pypi.org/project/arabic-lint/",
+   "https://pypi.org/project/arabic-tts-frontend/",
+   "https://stackoverflow.com/users/33097750/syamjith-nk"
+  ]
+ },
+ "publisher": {
+  "@type": "Person",
+  "name": "Syamjith NK",
+  "url": "https://syamjithnk.com",
+  "jobTitle": "Cinematographer and AI creative technologist",
+  "sameAs": [
+   "https://syamjithnk.com",
+   "https://github.com/Syamjith-NK",
+   "https://huggingface.co/syamjithnk",
+   "https://pypi.org/project/arabic-lint/",
+   "https://pypi.org/project/arabic-tts-frontend/",
+   "https://stackoverflow.com/users/33097750/syamjith-nk"
+  ]
+ },
+ "isPartOf": {
+  "@type": "Blog",
+  "name": "Syamjith NK — writing",
+  "url": "https://syamjith-nk.github.io/"
+ }
+}
+</script>
+</head>
+<body><div class="wrap">
+<a class="back" href="/">&larr; Syamjith NK</a>
+<p class="date" style="margin-top:26px">10 September 2026 &middot; Syamjith NK</p>
+<h1>I scanned 341 Arabic datasets to see if the corruption reaches training data</h1>
+
+<p>Three posts on this blog argue that the standard way to make Arabic work in Python
+corrupts it. That argument has a hole in it: all the evidence was about <em>rendering
+code</em>. A reversed chart label is embarrassing and fixable. But the same recipe run
+once, before a file is written, bakes the damage in permanently.</p>
+
+<p>If that ever happened upstream of a training corpus, every model trained on it learned
+from text no Arabic reader would accept. I could not find anyone who had checked, so I did.</p>
+
+<h2>Method, and why the first answer was wrong</h2>
+
+<p>I pulled rows for every Arabic dataset I could find on the Hugging Face Hub through the
+datasets-server API and scanned them with my own linter. 341 datasets.</p>
+
+<p>The first run said <strong>35.6%</strong> of an Islamic heritage OCR corpus was corrupted.
+Two others came back at 27% and 5%. That is a headline. I nearly had one.</p>
+
+<p>Then I printed the characters it was objecting to:</p>
+
+<pre><code>U+FD3F  ﴿  ORNATE RIGHT PARENTHESIS
+U+FD3E  ﴾  ORNATE LEFT PARENTHESIS
+U+FD40  ﵀  ARABIC LIGATURE RAHIMAHU ALLAAH</code></pre>
+
+<p>Those are not damage. `﴾ ﴿` is how you enclose a Quranic quotation, and `﵀` is an
+honorific. People type them deliberately. My tool was flagging them because Arabic
+Presentation Forms-A is <strong>interleaved</strong>: the positional glyph forms and ordinary
+semantic characters share one block, and I had excluded only the word ligatures at the end
+of it.</p>
+
+<p>So on Islamic heritage text, which is a large share of all Arabic corpora, the tool was
+confidently wrong, in the direction that publicly accuses somebody else's dataset. The fix
+was to stop tabulating ranges and derive the class from the Unicode character name: a
+shaping artefact is exactly a codepoint named <code>... ISOLATED/INITIAL/MEDIAL/FINAL
+FORM</code>. Everything else in the block is deliberate, and new Unicode additions classify
+themselves.</p>
+
+<p>All three datasets then read 0%.</p>
+
+<h2>The result</h2>
+
+<p><strong>276 datasets readable. 26,318 rows. 119,517 text fields.</strong></p>
+
+<p>Twenty-one had any finding at all, and twenty of those were a <em>single</em> stray
+presentation form in otherwise correct text, most often <code>U+FE91</code> BEH INITIAL
+FORM. That is copy-paste out of a PDF, or OCR residue. It is still wrong, because a
+tokenizer treats <code>ﺑ</code> and <code>ب</code> as different tokens, so the same word
+splits into different vocabulary entries and exact-match lookup fails silently. But it is
+not the recipe.</p>
+
+<p>One dataset was the recipe.</p>
+
+<h2>One dataset, 100%</h2>
+
+<p><a href="https://huggingface.co/datasets/Yousefmd/arabic_ocr_dataset">Yousefmd/arabic_ocr_dataset</a>
+— every text field, 400 out of 400 across four sample windows, 23 to 29 presentation forms
+per label. A sample row:</p>
+
+<pre><code>ﺑﺪﺃﺕ ﻗﺮﺍﺀﺓ ﺍﻟﺼﻔﺤﺎﺕ ﺍﻷﻭﻟﻰ ﻋﻠﻰ ﻧﻐﻤﺎﺕ</code></pre>
+
+<p>The intended text is <span dir="rtl">بدأت قراءة الصفحات الأولى على نغمات</span>. Two things
+happened to it: every letter was replaced by its contextual glyph form, and then the words
+were written in visual order. INITIAL, MEDIAL, FINAL and ISOLATED forms all present
+together. That is the complete signature.</p>
+
+<p>It matters more than its size because of <em>which field</em> is damaged. This is an OCR
+dataset, so <code>text</code> is the ground truth. A model trained on it learns to emit
+presentation forms in visual order, and then fails string comparison against real Arabic
+even when it read the image correctly. That is the path from a rendering bug into model
+weights, observed rather than argued for.</p>
+
+<p><strong>Now the honest part: that dataset has 17 downloads.</strong> This shows the
+mechanism reaches training data. It is not evidence that widely-used Arabic corpora are
+affected, and I am not going to write it as though it were.</p>
+
+<h2>What this does not show</h2>
+
+<p>65 datasets could not be read, and the viewer fails most often on the <em>largest</em>
+corpora. So this covers the mid and small end of the distribution well and the head of it
+poorly. Nothing here reaches web-scale pretraining data. A hundred rows per dataset also
+cannot find a defect confined to a rare subset.</p>
+
+<p>An earlier version of this audit claimed 121 datasets were unreadable. 61 of those were
+rate-limit errors caused by my own request rate. A coverage caveat built out of your own
+impatience is not a caveat, it is a mistake; a slower second pass recovered them.</p>
+
+<h2>The thing I would tell anyone doing this</h2>
+
+<p>The audit was one command away from being published with three named datasets and a
+percentage next to each. What stopped it was reading the flagged characters instead of
+trusting the count.</p>
+
+<p>If you point a measurement tool at somebody else's work, check its output against text
+you can actually read before the number leaves your machine. A false positive costs them a
+public accusation and costs you the only thing that makes the measurement worth anything.</p>
+
+<footer>
+The results, the scanner and the full write-up are published as
+<a href="https://huggingface.co/datasets/syamjithnk/arabic-corpus-audit">syamjithnk/arabic-corpus-audit</a> (CC BY 4.0),
+so the numbers can be re-derived rather than trusted.
+The tool is <a href="https://github.com/Syamjith-NK/arabic-lint">arabic-lint</a> (<code>pip install arabic-lint</code>).
+<br>Written by <a rel="author me" href="https://syamjithnk.com">Syamjith NK</a>. The research, the measurements and the upstream patches behind this post are at <a href="https://syamjithnk.com/evidence">syamjithnk.com/evidence</a>.
+</footer>
+</div></body></html>

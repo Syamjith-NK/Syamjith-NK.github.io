@@ -5,6 +5,13 @@
 <description>Measured notes on Arabic text handling, and the upstream fixes that came out of them.</description>
 <language>en</language>
 <item>
+  <title>I scanned 341 Arabic datasets to see if the corruption reaches training data</title>
+  <link>https://syamjith-nk.github.io/is-arabic-training-data-corrupted/</link>
+  <guid>https://syamjith-nk.github.io/is-arabic-training-data-corrupted/</guid>
+  <pubDate>Thu, 10 Sep 2026 00:00:00 +0000</pubDate>
+  <description>276 Arabic datasets readable, 119,517 text fields scanned, one fully corrupted OCR ground-truth set. And a false positive that nearly got published.</description>
+</item>
+<item>
   <title>3,168 files use the broken Arabic recipe. Most of them are fine.</title>
   <link>https://syamjith-nk.github.io/most-of-these-are-not-bugs/</link>
   <guid>https://syamjith-nk.github.io/most-of-these-are-not-bugs/</guid>
