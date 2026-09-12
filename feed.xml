@@ -5,6 +5,13 @@
 <description>Measured notes on Arabic text handling, and the upstream fixes that came out of them.</description>
 <language>en</language>
 <item>
+  <title>The maintainer did not take the fix my tool recommends. He was right.</title>
+  <link>https://syamjith-nk.github.io/the-maintainer-did-not-take-my-fix/</link>
+  <guid>https://syamjith-nk.github.io/the-maintainer-did-not-take-my-fix/</guid>
+  <pubDate>Sat, 12 Sep 2026 00:00:00 +0000</pubDate>
+  <description>Two of the four Arabic rendering bugs I filed are fixed. The maintainer chose a version gate over deleting the call, for a reason a static analyser cannot see.</description>
+</item>
+<item>
   <title>I scanned 341 Arabic datasets to see if the corruption reaches training data</title>
   <link>https://syamjith-nk.github.io/is-arabic-training-data-corrupted/</link>
   <guid>https://syamjith-nk.github.io/is-arabic-training-data-corrupted/</guid>

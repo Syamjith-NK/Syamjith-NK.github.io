@@ -1,0 +1,219 @@
+<!doctype html>
+<html lang="en"><head><meta charset="utf-8">
+<meta name="viewport" content="width=device-width,initial-scale=1">
+<title>The maintainer did not take the fix my tool recommends. He was right. — Syamjith NK</title>
+<meta name="description" content="Two of the four Arabic rendering bugs I filed are fixed. The maintainer chose a version gate over deleting the call, for a reason a static analyser cannot see.">
+<meta property="og:title" content="The maintainer did not take the fix my tool recommends. He was right.">
+<meta property="og:description" content="Two of the four Arabic rendering bugs I filed are fixed. The maintainer chose a version gate over deleting the call, for a reason a static analyser cannot see.">
+<meta property="og:type" content="article">
+<style>
+:root{ --ink:#16181d; --ink-2:#3f454d; --ink-3:#767d87; --line:#e3e6ea; --bg:#fbfbfa; --link:#0b5cd5; --code:#f2f3f5; }
+@media (prefers-color-scheme:dark){
+  :root{ --ink:#e8eaed; --ink-2:#b9c0c9; --ink-3:#767d87; --line:#282c33; --bg:#14161a; --link:#79aaff; --code:#1c1f25; }
+}
+*{box-sizing:border-box}
+body{margin:0;background:var(--bg);color:var(--ink);
+ font:17.5px/1.7 -apple-system,BlinkMacSystemFont,"Segoe UI",Inter,system-ui,sans-serif;-webkit-font-smoothing:antialiased}
+.wrap{max-width:44rem;margin:0 auto;padding:clamp(28px,6vw,72px) clamp(20px,5vw,32px)}
+a{color:var(--link)}
+.back{font-size:14px;color:var(--ink-3);text-decoration:none}
+h1{font-size:clamp(28px,4.4vw,38px);line-height:1.18;letter-spacing:-.022em;margin:26px 0 10px}
+h2{font-size:21px;letter-spacing:-.012em;margin:44px 0 12px}
+.date{color:var(--ink-3);font-size:14.5px;margin:0 0 6px}
+p{color:var(--ink-2);margin:0 0 19px}
+strong{color:var(--ink)}
+code{background:var(--code);padding:.12em .34em;border-radius:4px;font-size:.9em;
+ font-family:ui-monospace,SFMono-Regular,Menlo,"Noto Naskh Arabic","Geeza Pro","Arial Unicode MS",monospace}
+pre{background:var(--code);padding:16px 18px;border-radius:8px;overflow-x:auto;margin:0 0 20px}
+pre code{background:none;padding:0;font-size:14px;line-height:1.55}
+pre code, code{font-variant-ligatures:none}
+blockquote{margin:0 0 20px;padding:2px 0 2px 18px;border-left:3px solid var(--line);color:var(--ink-2)}
+blockquote p:last-child{margin-bottom:0}
+table{border-collapse:collapse;width:100%;margin:0 0 22px;font-size:15.5px}
+th,td{text-align:left;padding:9px 12px;border-bottom:1px solid var(--line)}
+th{color:var(--ink-3);font-weight:600;font-size:13px;text-transform:uppercase;letter-spacing:.05em}
+ul{color:var(--ink-2);padding-left:22px;margin:0 0 19px}
+li{margin:0 0 8px}
+footer{margin-top:52px;padding-top:22px;border-top:1px solid var(--line);color:var(--ink-3);font-size:14.5px}
+</style><meta name="author" content="Syamjith NK">
+<link rel="canonical" href="https://syamjith-nk.github.io/the-maintainer-did-not-take-my-fix/">
+<link rel="me" href="https://syamjithnk.com">
+<link rel="me" href="https://github.com/Syamjith-NK">
+<meta property="og:url" content="https://syamjith-nk.github.io/the-maintainer-did-not-take-my-fix/">
+<meta property="article:author" content="Syamjith NK">
+<script type="application/ld+json">
+{
+ "@context": "https://schema.org",
+ "@type": "BlogPosting",
+ "headline": "The maintainer did not take the fix my tool recommends. He was right.",
+ "description": "Two of the four Arabic rendering bugs I filed are fixed. The maintainer chose a version gate over deleting the call, for a reason a static analyser cannot see.",
+ "url": "https://syamjith-nk.github.io/the-maintainer-did-not-take-my-fix/",
+ "mainEntityOfPage": {
+  "@type": "WebPage",
+  "@id": "https://syamjith-nk.github.io/the-maintainer-did-not-take-my-fix/"
+ },
+ "datePublished": "2026-09-12",
+ "dateModified": "2026-09-12",
+ "inLanguage": "en",
+ "author": {
+  "@type": "Person",
+  "name": "Syamjith NK",
+  "url": "https://syamjithnk.com",
+  "jobTitle": "Cinematographer and AI creative technologist",
+  "sameAs": [
+   "https://syamjithnk.com",
+   "https://github.com/Syamjith-NK",
+   "https://huggingface.co/syamjithnk",
+   "https://pypi.org/project/arabic-lint/",
+   "https://pypi.org/project/arabic-tts-frontend/",
+   "https://stackoverflow.com/users/33097750/syamjith-nk"
+  ]
+ },
+ "publisher": {
+  "@type": "Person",
+  "name": "Syamjith NK",
+  "url": "https://syamjithnk.com",
+  "jobTitle": "Cinematographer and AI creative technologist",
+  "sameAs": [
+   "https://syamjithnk.com",
+   "https://github.com/Syamjith-NK",
+   "https://huggingface.co/syamjithnk",
+   "https://pypi.org/project/arabic-lint/",
+   "https://pypi.org/project/arabic-tts-frontend/",
+   "https://stackoverflow.com/users/33097750/syamjith-nk"
+  ]
+ },
+ "isPartOf": {
+  "@type": "Blog",
+  "name": "Syamjith NK — writing",
+  "url": "https://syamjith-nk.github.io/"
+ }
+}
+</script>
+</head>
+<body><div class="wrap">
+<a class="back" href="/">&larr; Syamjith NK</a>
+<p class="date" style="margin-top:26px">12 September 2026 &middot; Syamjith NK</p>
+<h1>The maintainer did not take the fix my tool recommends. He was right.</h1>
+
+<p>On 8 September I filed four issues about the same defect: Python code that pre-shapes Arabic
+with <code>arabic_reshaper.reshape()</code> and <code>bidi.get_display()</code> before handing it
+to matplotlib, which has shaped text itself since 3.11. The workaround that used to be necessary
+now reverses the string.</p>
+
+<p>This morning two of them were closed as completed by the same maintainer,
+<a href="https://github.com/justncodes">justncodes</a>:
+<a href="https://github.com/whiteout-project/bot/issues/110">whiteout-project/bot#110</a> and
+<a href="https://github.com/kingshot-project/Kingshot-Discord-Bot/issues/28">kingshot-project/Kingshot-Discord-Bot#28</a>.
+The interesting part is not that they were fixed. It is that <strong>he did not use the fix my
+linter performs</strong>, and reading his reason showed me the tool is overconfident.</p>
+
+<h2>The bug</h2>
+
+<p>Both bots draw charts of player activity, and player names are often Arabic. Both route those
+names through a helper carrying the docstring <em>&ldquo;Shape Arabic for matplotlib (which
+doesn&rsquo;t run bidi itself)&rdquo;</em>, which was true for about a decade and stopped being
+true in matplotlib 3.11. Their pin was <code>matplotlib&gt;=3.10.5</code> with no upper bound, so
+a fresh install resolves to 3.11 and the shaping happens twice.</p>
+
+<p>I did not try to prove that with a number. An earlier attempt at a cross-renderer pixel metric
+scored the <em>correct</em> render worse than the broken one, because normalising two different
+ink boxes to a fixed size warps them differently. What settles it is rendering both and looking:
+<span dir="rtl">محمد الفارس</span> comes out as <span dir="rtl">سرافلا دمحم</span>. Letters and
+word order both reversed. Any Arabic reader confirms that in a second, and the issue quotes those
+two strings rather than a statistic.</p>
+
+<h2>What my tool does</h2>
+
+<p><code>arabic-lint --fix</code> deletes the pre-shaping. Where the whole recipe sits in one
+expression, the rewrite is provably correct and the tool applies it:</p>
+
+<pre><code>-    return _bidi_get_display(_arabic_reshaper.reshape(text))
++    return text</code></pre>
+
+<p>It refuses the split form, where <code>reshape()</code> and <code>get_display()</code> are on
+separate lines, because removing only the second call strips the reordering and leaves the shaping
+applied: still wrong, but now looking fixed. I was fairly pleased with that piece of restraint.
+It turns out to be restraint about the wrong thing.</p>
+
+<h2>What he did instead</h2>
+
+<p>His reply, in full, on both issues:</p>
+
+<blockquote><p>Confirmed, and thanks for the thorough report. Our updater only installs missing
+packages rather than enforcing version bumps, so requiring 3.11 would have left existing installs
+on 3.10 with no shaping at all; we&rsquo;ve gone with a version gate instead (pass through on
+3.11+, pre-shape below). The same pattern also existed in our attendance table reports and is
+fixed there too. Will ship in the next release.</p></blockquote>
+
+<p>The shape of it, in my words rather than his code:</p>
+
+<pre><code>if matplotlib_version &gt;= (3, 11):
+    return text
+return get_display(reshape(text))</code></pre>
+
+<p>My deletion assumes the installed matplotlib is 3.11 or newer. For these projects that
+assumption does not hold, and the reason is nowhere in the source: <strong>their updater installs
+missing packages and never bumps an existing one.</strong> Thousands of running installs sit on
+3.10 and will stay there. Delete the call on those and Arabic names do not come out reversed any
+more, they come out unshaped, as disconnected letters in the wrong order. I would have traded one
+rendering bug for another and told them it was a fix.</p>
+
+<h2>The rule this actually is</h2>
+
+<p>The correct fix depends on whether the project controls its own dependency floor.</p>
+
+<table>
+<thead><tr><th>project</th><th>can it force matplotlib 3.11?</th><th>correct fix</th></tr></thead>
+<tbody>
+<tr><td>Application with a lockfile or pinned requirements</td><td>yes</td><td>delete the pre-shaping</td></tr>
+<tr><td>Library on PyPI</td><td>yes, by raising its floor in metadata</td><td>delete it and raise the floor</td></tr>
+<tr><td>Self-hosted app that updates itself without bumping versions</td><td><strong>no</strong></td><td><strong>version gate</strong></td></tr>
+<tr><td>Anything a user installs by hand from a README</td><td>no</td><td>version gate</td></tr>
+</tbody>
+</table>
+
+<p>A static analyser reads the file. It cannot read the distribution model, and the distribution
+model is what decides this. So the honest thing for the tool to report is not <em>remove this
+line</em>, it is: this pre-shaping is wrong on matplotlib 3.11 and newer, and here are two ways to
+resolve it depending on whether you can guarantee the version your users have. That is a
+correction to <code>--fix</code>, not to the detection, and it is the next thing I will change.
+The check found a real bug in both repos. The remedy it attached to that bug was too confident
+about somebody else&rsquo;s deployment.</p>
+
+<h2>The call site I did not find</h2>
+
+<p>One line of his reply is easy to skip: <em>&ldquo;The same pattern also existed in our
+attendance table reports and is fixed there too.&rdquo;</em></p>
+
+<p>I never mentioned that code. I reported one helper in one file, because that is the one I could
+verify by reading their source from outside. He knew where else the pattern lived in his own
+project, and fixed both in the same pass.</p>
+
+<p>That is worth remembering before spending an afternoon enumerating every call site in a
+stranger&rsquo;s repository. What a bug report has to deliver is the <em>diagnosis</em>: what is
+wrong, why it is wrong now when it was right before, and how to tell. The maintainer supplies the
+map. Mine was one helper and a version boundary, and it reached code I never saw.</p>
+
+<h2>The other two</h2>
+
+<p>Four were filed. Two are fixed, and two have had no reply at all:
+<a href="https://github.com/shahkoorosh/ComfyUI-PersianText/issues/3">ComfyUI-PersianText#3</a>
+(the Pillow-with-Raqm version of the same mistake) and
+<a href="https://github.com/NoorBayan/Diwan/issues/3">NoorBayan/Diwan#3</a>, an Arabic poetry
+dataset whose chart labels and titles are reversed on any current install.</p>
+
+<p>They may get fixed, or they may sit open for a year. Filing an issue is not an outcome, it is
+a message to a volunteer with their own backlog, and half of mine have not been read. The two that
+were read got answered in four days by someone who understood the report faster than I wrote it,
+then improved on the fix I suggested. That is a better result than the one I was expecting, and
+the useful part of it is the correction.</p>
+
+<footer>
+The two fixed reports are <a href="https://github.com/whiteout-project/bot/issues/110">whiteout-project/bot&nbsp;#110</a>
+and <a href="https://github.com/kingshot-project/Kingshot-Discord-Bot/issues/28">Kingshot-Discord-Bot&nbsp;#28</a>.
+The upstream change behind all of this is <a href="https://github.com/matplotlib/matplotlib/pull/32263">matplotlib&nbsp;#32263</a>.
+The checker is <a href="https://github.com/Syamjith-NK/arabic-lint">arabic-lint</a> (<code>pip install arabic-lint</code>).
+<br>Written by <a rel="author me" href="https://syamjithnk.com">Syamjith NK</a>. The research, the measurements and the upstream patches behind this post are at <a href="https://syamjithnk.com/evidence">syamjithnk.com/evidence</a>.
+</footer>
+</div></body></html>
