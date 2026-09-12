@@ -118,7 +118,7 @@ footer{margin-top:52px;padding-top:22px;border-top:1px solid var(--line);color:v
 
 <p>This is not a corner case. <span class="ar">ال</span> is the definite article; alef is the commonest letter in the language. &quot;Definite article followed by alef&quot; is one of the most frequent sequences in written Arabic. Any real corpus is full of it.</p>
 
-<h2>So the tool reports and never rewrites</h2>
+<h2>So the tool will not rewrite stored text</h2>
 
 <p>I wrote <a href="https://github.com/Syamjith-NK/arabic-lint">arabic-lint</a> to find this class of corruption &mdash; Arabic that was mangled <em>before it was stored</em>, written back into JSON, localisation files, CSV exports and source, where every later render faithfully reproduces the damage.</p>
 
@@ -126,9 +126,11 @@ footer{margin-top:52px;padding-top:22px;border-top:1px solid var(--line);color:v
 arabic-lint ./locales
 </code></pre>
 
-<p>Zero dependencies, exits non-zero on findings, drops into CI. And it deliberately has no <code>--fix</code>.</p>
+<p>Zero dependencies, exits non-zero on findings, drops into CI. And it will not repair the corrupted text it finds.</p>
 
-<p>That was a choice, not an omission. A fixer that is correct 95% of the time and silently produces a plausible wrong word the other 5% is worse than no fixer, because it converts a visible problem into an invisible one. The only safe repair is to go back to the source that was corrupted and re-export it.</p>
+<p>That is a choice, not an omission. A fixer that is correct 95% of the time and silently produces a plausible wrong word the other 5% is worse than no fixer, because it converts a visible problem into an invisible one. The only safe repair is to go back to the source that was corrupted and re-export it.</p>
+
+<p><strong>Correction, 13 September 2026. When I published this I wrote that the tool "deliberately has no <code>--fix</code>". That stopped being true in version 0.4.0, and I left the sentence up.</strong> There is a <code>--fix</code> now, and the reason it exists is the same reason the paragraph above still stands. It never touches stored text, for exactly the lam-alef argument in this post. It rewrites <em>source</em>, and only the shape where the whole recipe sits inside a single expression, because <code>get_display(reshape(text))</code> can provably become <code>text</code> with nothing else depending on the result. Where the two halves are split across separate lines it refuses and tells you why: deleting only the <code>get_display()</code> call removes the reordering and leaves the shaping applied, which is still wrong and now looks fixed. Damage already written to disk is unrepairable; a bug in code you can still read is not. The asymmetry is the product.</p>
 
 <h2>What real data taught me that unit tests did not</h2>
 
