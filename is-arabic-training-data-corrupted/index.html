@@ -51,7 +51,7 @@ footer{margin-top:52px;padding-top:22px;border-top:1px solid var(--line);color:v
   "@id": "https://syamjith-nk.github.io/is-arabic-training-data-corrupted/"
  },
  "datePublished": "2026-09-10",
- "dateModified": "2026-09-10",
+ "dateModified": "2026-09-13",
  "inLanguage": "en",
  "author": {
   "@type": "Person",
@@ -167,21 +167,44 @@ you nothing instead of costing you the word.</p>
 <h2>One dataset, 100%</h2>
 
 <p><a href="https://huggingface.co/datasets/Yousefmd/arabic_ocr_dataset">Yousefmd/arabic_ocr_dataset</a>
-— every text field, 400 out of 400 across four sample windows, 23 to 29 presentation forms
-per label. A sample row:</p>
+— every text field, 1,000 out of 1,000 labels sampled through ten windows across its whole
+20,000-row split, 3 to 50 presentation forms per label. A sample row:</p>
 
 <pre><code>ﺑﺪﺃﺕ ﻗﺮﺍﺀﺓ ﺍﻟﺼﻔﺤﺎﺕ ﺍﻷﻭﻟﻰ ﻋﻠﻰ ﻧﻐﻤﺎﺕ</code></pre>
 
-<p>The intended text is <span dir="rtl">بدأت قراءة الصفحات الأولى على نغمات</span>. Two things
-happened to it: every letter was replaced by its contextual glyph form, and then the words
-were written in visual order. INITIAL, MEDIAL, FINAL and ISOLATED forms all present
-together. That is the complete signature.</p>
+<p>The intended text is <span dir="rtl">بدأت قراءة الصفحات الأولى على نغمات</span>. Every letter
+has been replaced by its contextual glyph form — INITIAL, MEDIAL, FINAL and ISOLATED all present
+together. Only that half of the recipe ran: the words are in ordinary logical order, so
+<code>unicodedata.normalize("NFKC", text)</code> alone gives the line back exactly as written
+above, with no reversal needed.</p>
 
 <p>It matters more than its size because of <em>which field</em> is damaged. This is an OCR
 dataset, so <code>text</code> is the ground truth. A model trained on it learns to emit
-presentation forms in visual order, and then fails string comparison against real Arabic
-even when it read the image correctly. That is the path from a rendering bug into model
+presentation forms instead of plain letters, and then fails string comparison against real
+Arabic even when it read the image correctly. That is the path from a rendering bug into model
 weights, observed rather than argued for.</p>
+
+<p><strong>Correction, 13 September 2026. I originally wrote that the words were also "written
+in visual order", and called that "the complete signature". That was wrong, and it was the more
+damaging half of what I said, because I said it in a thread on the author's own repository.</strong>
+Only the shaping step ran. Two checks settle it: <code>NFKC</code> alone returns correct readable
+Arabic, and of 5,423 sampled words carrying more than one presentation form, <em>zero</em> begin
+with a FINAL form — which is what a word stored in visual order looks like read out of memory.
+<code>arabic_reshaper.reshape(NFKC(stored))</code> also reproduces the stored string exactly, for
+1,000 of 1,000 labels, which pins down which half ran. The practical consequence is that the
+repair advice I gave was wrong in the worse direction: I warned that recovery needed more than
+<code>NFKC</code> because of the lam-alef trap in the post above, when for this data
+<code>NFKC</code> alone is complete and safe. The detector reports stored <em>glyph forms</em>;
+visual order is a separate property, and I never measured it — I assumed it, because the two
+steps are usually copied together. <a href="https://huggingface.co/datasets/Yousefmd/arabic_ocr_dataset/discussions/2">The
+correction is posted in that thread</a> as well.</p>
+
+<p>One more thing worth writing down, because it nearly put a second wrong number in public.
+My first check for "is this a presentation form?" tested the Unicode name for
+<code>ARABIC LETTER … FORM</code>. That silently drops every lam-alef ligature, U+FEF5–FEFC,
+whose names begin <code>ARABIC LIGATURE</code> instead — the exact character the visual-order
+test is most sensitive to. Asking the linter's own classifier instead moved the word count
+from 5,404 to 5,423. The conclusion held, but only because I checked.</p>
 
 <p><strong>Now the honest part: that dataset has 17 downloads.</strong> This shows the
 mechanism reaches training data. It is not evidence that widely-used Arabic corpora are
