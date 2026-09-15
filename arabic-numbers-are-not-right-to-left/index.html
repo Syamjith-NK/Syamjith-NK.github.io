@@ -1,0 +1,256 @@
+<!doctype html>
+<html lang="en"><head><meta charset="utf-8">
+<meta name="viewport" content="width=device-width,initial-scale=1">
+<title>Arabic runs right to left. Arabic numbers do not. — Syamjith NK</title>
+<meta name="description" content="Arabic-Indic digits sat inside pypdf's right-to-left range, so a page reading 1234 extracted as 4321. A two-line fix, merged, and the reason the mistake is so easy to make.">
+<meta property="og:title" content="Arabic runs right to left. Arabic numbers do not.">
+<meta property="og:description" content="Arabic-Indic digits sat inside pypdf's right-to-left range, so a page reading 1234 extracted as 4321. A two-line fix, merged, and the reason the mistake is so easy to make.">
+<meta property="og:type" content="article">
+<style>
+:root{ --ink:#16181d; --ink-2:#3f454d; --ink-3:#767d87; --line:#e3e6ea; --bg:#fbfbfa; --link:#0b5cd5; --code:#f2f3f5; }
+@media (prefers-color-scheme:dark){
+  :root{ --ink:#e8eaed; --ink-2:#b9c0c9; --ink-3:#767d87; --line:#282c33; --bg:#14161a; --link:#79aaff; --code:#1c1f25; }
+}
+*{box-sizing:border-box}
+body{margin:0;background:var(--bg);color:var(--ink);
+ font:17.5px/1.7 -apple-system,BlinkMacSystemFont,"Segoe UI",Inter,system-ui,sans-serif;-webkit-font-smoothing:antialiased}
+.wrap{max-width:44rem;margin:0 auto;padding:clamp(28px,6vw,72px) clamp(20px,5vw,32px)}
+a{color:var(--link)}
+.back{font-size:14px;color:var(--ink-3);text-decoration:none}
+h1{font-size:clamp(28px,4.4vw,38px);line-height:1.18;letter-spacing:-.022em;margin:26px 0 10px}
+h2{font-size:21px;letter-spacing:-.012em;margin:44px 0 12px}
+.date{color:var(--ink-3);font-size:14.5px;margin:0 0 6px}
+p{color:var(--ink-2);margin:0 0 19px}
+strong{color:var(--ink)}
+code{background:var(--code);padding:.12em .34em;border-radius:4px;font-size:.9em;
+ font-family:ui-monospace,SFMono-Regular,Menlo,"Noto Naskh Arabic","Geeza Pro","Arial Unicode MS",monospace}
+pre{background:var(--code);padding:16px 18px;border-radius:8px;overflow-x:auto;margin:0 0 20px}
+pre code{background:none;padding:0;font-size:14px;line-height:1.55}
+pre code, code{font-variant-ligatures:none}
+blockquote{margin:0 0 20px;padding:2px 0 2px 18px;border-left:3px solid var(--line);color:var(--ink-2)}
+blockquote p:last-child{margin-bottom:0}
+table{border-collapse:collapse;width:100%;margin:0 0 22px;font-size:15.5px}
+th,td{text-align:left;padding:9px 12px;border-bottom:1px solid var(--line)}
+th{color:var(--ink-3);font-weight:600;font-size:13px;text-transform:uppercase;letter-spacing:.05em}
+ul{color:var(--ink-2);padding-left:22px;margin:0 0 19px}
+li{margin:0 0 8px}
+footer{margin-top:52px;padding-top:22px;border-top:1px solid var(--line);color:var(--ink-3);font-size:14.5px}
+</style><meta name="author" content="Syamjith NK">
+<link rel="canonical" href="https://syamjith-nk.github.io/arabic-numbers-are-not-right-to-left/">
+<link rel="me" href="https://syamjithnk.com">
+<link rel="me" href="https://github.com/Syamjith-NK">
+<meta property="og:url" content="https://syamjith-nk.github.io/arabic-numbers-are-not-right-to-left/">
+<meta property="article:author" content="Syamjith NK">
+<script type="application/ld+json">
+{
+ "@context": "https://schema.org",
+ "@type": "BlogPosting",
+ "headline": "Arabic runs right to left. Arabic numbers do not.",
+ "description": "Arabic-Indic digits sat inside pypdf's right-to-left range, so a page reading 1234 extracted as 4321. A two-line fix, merged, and the reason the mistake is so easy to make.",
+ "url": "https://syamjith-nk.github.io/arabic-numbers-are-not-right-to-left/",
+ "mainEntityOfPage": {
+  "@type": "WebPage",
+  "@id": "https://syamjith-nk.github.io/arabic-numbers-are-not-right-to-left/"
+ },
+ "datePublished": "2026-09-15",
+ "dateModified": "2026-09-15",
+ "inLanguage": "en",
+ "author": {
+  "@type": "Person",
+  "name": "Syamjith NK",
+  "url": "https://syamjithnk.com",
+  "jobTitle": "Cinematographer and AI creative technologist",
+  "sameAs": [
+   "https://syamjithnk.com",
+   "https://github.com/Syamjith-NK",
+   "https://huggingface.co/syamjithnk",
+   "https://pypi.org/project/arabic-lint/",
+   "https://pypi.org/project/arabic-tts-frontend/",
+   "https://stackoverflow.com/users/33097750/syamjith-nk"
+  ]
+ },
+ "publisher": {
+  "@type": "Person",
+  "name": "Syamjith NK",
+  "url": "https://syamjithnk.com",
+  "jobTitle": "Cinematographer and AI creative technologist",
+  "sameAs": [
+   "https://syamjithnk.com",
+   "https://github.com/Syamjith-NK",
+   "https://huggingface.co/syamjithnk",
+   "https://pypi.org/project/arabic-lint/",
+   "https://pypi.org/project/arabic-tts-frontend/",
+   "https://stackoverflow.com/users/33097750/syamjith-nk"
+  ]
+ },
+ "isPartOf": {
+  "@type": "Blog",
+  "name": "Syamjith NK — writing",
+  "url": "https://syamjith-nk.github.io/"
+ }
+}
+</script>
+</head>
+<body><div class="wrap">
+<a class="back" href="/">&larr; Syamjith NK</a>
+<p class="date" style="margin-top:26px">15 September 2026 &middot; Syamjith NK</p>
+<h1>Arabic runs right to left. Arabic numbers do not.</h1>
+
+<p>Extract the text from a PDF invoice written in Arabic with
+<a href="https://github.com/py-pdf/pypdf">pypdf</a>, and until yesterday every Arabic-Indic number
+on the page came back reversed. A total of <span dir="ltr">١٢٣٤</span> extracted as
+<span dir="ltr">٤٣٢١</span>. No error, no warning, and a number that still looks entirely like a
+number.</p>
+
+<p>I filed the fix on 13 September and
+<a href="https://github.com/py-pdf/pypdf/pull/4077">it was merged on the 14th</a>. The library
+change is <strong>two lines</strong>. The other 81 lines of the patch are the test. What is worth
+writing down is not the patch, it is why this particular mistake is so easy to make that a library
+with ten thousand stars carried it.</p>
+
+<h2>Why the digits were in the wrong bucket</h2>
+
+<p>pypdf has to decide, character by character, whether text is running left to right or right to
+left, because a PDF content stream stores glyphs in the order they were painted and not in reading
+order. Its rule is a list of codepoint ranges. Anything in the right-to-left list gets
+<em>prepended</em> to the string being built up rather than appended, which is what turns painted
+order back into logical order.</p>
+
+<p>The Arabic entry in that list is one broad block:</p>
+
+<pre><code>RTL_CHARACTER_RANGES = (
+    ("\u0590", "\u08FF"),  # Hebrew, Arabic, Syriac, Thaana, N'Ko, etc.
+    ...
+)</code></pre>
+
+<p>That range is correct for the letters. It is also, unavoidably, where the Arabic-Indic digits
+live: U+0660 to U+0669 sits in the middle of it. So each digit of a number was prepended in turn,
+and a four-digit number came out backwards.</p>
+
+<h2>The actual rule</h2>
+
+<p>Arabic script runs right to left. Arabic-Indic <em>numbers</em> do not. They are written and
+read left to right, most significant digit first, exactly like Western digits &mdash; which is
+unsurprising once you remember that Western digits are themselves a borrowing of this notation.</p>
+
+<p>Unicode encodes this directly. A character does not have a script and inherit its direction
+from it; it has its own bidirectional class. Arabic letters are class <code>AL</code>, Arabic
+letter. Hebrew letters are <code>R</code>. The Arabic-Indic digits are class <code>AN</code>,
+Arabic Number, and the bidirectional algorithm does not reverse a run of them.</p>
+
+<p>The Persian digits make the point even more bluntly. They are not <code>AN</code>; they are
+class <code>EN</code>, <strong>European Number</strong> &mdash; a name that is odd until you accept
+that these classes describe numeric behaviour and have nothing to do with which script or region
+the character comes from. You can check any of this in one line with
+<code>unicodedata.bidirectional()</code>:</p>
+
+<table>
+<thead><tr><th>characters</th><th>bidi class</th><th>reversed on extraction?</th></tr></thead>
+<tbody>
+<tr><td>Arabic letters</td><td><code>AL</code> &mdash; Arabic Letter</td><td>yes &mdash; correctly</td></tr>
+<tr><td>Hebrew letters</td><td><code>R</code> &mdash; Right-to-Left</td><td>yes &mdash; correctly</td></tr>
+<tr><td>Arabic-Indic digits U+0660&ndash;U+0669</td><td><strong><code>AN</code></strong> &mdash; Arabic Number</td><td><strong>no</strong></td></tr>
+<tr><td>Persian digits U+06F0&ndash;U+06F9</td><td><strong><code>EN</code></strong> &mdash; European Number</td><td><strong>no</strong></td></tr>
+</tbody>
+</table>
+
+<p>So the defect is one substitution: treating <em>this character belongs to an Arabic block</em>
+as <em>this character is right-to-left</em>. For letters the two are the same thing, which is
+exactly why the shortcut survives. It only comes apart on the digits, and the digits are the part
+of an Arabic document a developer is least likely to be reading.</p>
+
+<p>This is the same family of error as the one I wrote about in
+<a href="/arabic-reshape-bidi-is-now-the-bug/">the reshape+bidi recipe</a>: direction and ordering
+are properties of individual characters, and every bug in this area comes from applying a decision
+to a whole string that only holds for part of it.</p>
+
+<h2>A reversed number is worse than reversed prose</h2>
+
+<p>Reversed Arabic prose announces itself. <span dir="rtl">مرحبا</span> coming out as
+<span dir="rtl">ابحرم</span> is not a word; anyone who reads the script sees it instantly, and even
+someone who does not can usually tell the shapes are wrong.</p>
+
+<p><span dir="ltr">٤٣٢١</span> is a perfectly good number. It is the wrong one, but nothing about it looks
+damaged, and there is no proofreading pass that catches it. It is the same property that makes
+<a href="/you-cannot-auto-fix-corrupted-arabic/">the lam-alef case</a> unfixable after the fact:
+corruption that lands on a plausible value is far more dangerous than corruption that lands on
+nonsense, because the plausible one gets believed.</p>
+
+<p>The class of document where this matters is not exotic &mdash; invoices, bank statements,
+dates, identity numbers, any Arabic PDF that a pipeline reads rather than a person. I have not
+measured how much of that exists or how much of it broke, and I am not going to guess. The
+mechanism is enough of a reason to fix it.</p>
+
+<h2>The fix</h2>
+
+<p>pypdf already has a second list, <code>NEUTRAL_CHARACTER_RANGES</code>, for characters that
+belong to neither direction and should simply be appended: ASCII punctuation, general punctuation,
+currency symbols. The digits belong there. That is the whole change:</p>
+
+<pre><code> NEUTRAL_CHARACTER_RANGES = (
+     ("\x00", "\x2F"),      # ASCII control codes, space, and early punctuation (!"#$%)
+     ("\x3A", "\x40"),      # ASCII operators and punctuation between digits &amp; A (:;&lt;=&gt;?@)
++    ("\u0660", "\u066D"),  # Arabic-Indic digits and Arabic numeric separators
++    ("\u06F0", "\u06F9"),  # Extended Arabic-Indic (Persian) digits
+     ("\u2000", "\u206F"),  # General punctuation
+     ("\u20A0", "\u21FF"),  # Currency symbols, ...
+ )</code></pre>
+
+<p>The first range runs to U+066D rather than U+0669 because the characters just above the digits
+are the Arabic percent sign, decimal separator and thousands separator &mdash; punctuation that
+appears <em>inside</em> a number. Moving the digits out while leaving those behind in the
+right-to-left list would have broken <span dir="rtl">٥٠٪</span> in a new way. U+066D itself, the
+Arabic five-pointed star, is not numeric at all; it is just where a contiguous range has to
+end.</p>
+
+<h2>Most of the patch is the test, and two of the cases assert nothing changed</h2>
+
+<p>Testing PDF text extraction usually means committing a PDF, and a binary fixture is a thing
+nobody can review. This test builds its page instead: a Type0 font with Identity-H encoding, where
+the character codes are just 1, 2, 3&hellip; and a ToUnicode CMap maps them back to the characters
+under test. There is no embedded font program, so what comes out depends only on pypdf's own
+handling, and the whole fixture is readable Python.</p>
+
+<p>Five cases run against it, and the two that matter most are the ones where the expected output
+is unchanged:</p>
+
+<table>
+<thead><tr><th>painted on the page</th><th>pypdf extracts</th><th>what the case pins</th></tr></thead>
+<tbody>
+<tr><td><span dir="ltr">١٢٣٤</span></td><td><span dir="ltr">١٢٣٤</span></td><td>Arabic-Indic digits keep their order</td></tr>
+<tr><td><span dir="ltr">۱۲۳۴</span></td><td><span dir="ltr">۱۲۳۴</span></td><td>Persian digits likewise</td></tr>
+<tr><td><span dir="rtl">٥٠٪</span></td><td><span dir="rtl">٥٠٪</span></td><td>digits with the Arabic percent sign</td></tr>
+<tr><td><span dir="rtl">ابحرم</span></td><td><span dir="rtl">مرحبا</span></td><td><strong>Arabic letters are still reversed</strong></td></tr>
+<tr><td><span dir="rtl">םולש</span></td><td><span dir="rtl">שלום</span></td><td><strong>Hebrew is unaffected</strong></td></tr>
+</tbody>
+</table>
+
+<p>Widening a neutral list is the kind of change that fixes one thing by breaking another. The
+obvious failure mode here is over-correcting: pull too much out of the right-to-left range and
+Arabic words stop being reordered at all, which trades a wrong number for wrong prose on every
+page. The last two cases are there to fail if that happens. A test that only proves the bug is
+gone does not tell you what the fix cost.</p>
+
+<h2>What this is and is not</h2>
+
+<p>It is two lines in a library I had not contributed to before, merged by
+<a href="https://github.com/stefan6419846">stefan6419846</a> the day after it was opened. It is
+not in a released version: the latest tag, 6.18.1, predates the merge by three days, so
+<code>pip install pypdf</code> today still reverses your digits. It does not close
+<a href="https://github.com/py-pdf/pypdf/issues/1629">#1629</a>, the broader issue about Arabic
+mixed with digits and punctuation, which has been open since February 2023 and remains open. And
+one merged pull request does not make me a pypdf contributor in any sense worth claiming.</p>
+
+<p>What it is, is a small confirmation of something the last few weeks of this have kept
+demonstrating: the bugs in Arabic text handling are rarely hard, they are unattended. Two lines,
+in plain sight, in a repository with ten thousand stars and an open issue touching the same area
+since 2023. They survive because almost nobody who reads the code reads the output.</p>
+
+<footer>
+The change is <a href="https://github.com/py-pdf/pypdf/pull/4077">pypdf&nbsp;#4077</a>, merged 14 September 2026.
+The earlier upstream work is <a href="https://github.com/matplotlib/matplotlib/pull/32263">matplotlib&nbsp;#32263</a>
+and <a href="https://github.com/python-pillow/Pillow/pull/9925">Pillow&nbsp;#9925</a>.
+The checker is <a href="https://github.com/Syamjith-NK/arabic-lint">arabic-lint</a> (<code>pip install arabic-lint</code>).
+<br>Written by <a rel="author me" href="https://syamjithnk.com">Syamjith NK</a>. The research, the measurements and the upstream patches behind this post are at <a href="https://syamjithnk.com/evidence">syamjithnk.com/evidence</a>.
+</footer>
+</div></body></html>

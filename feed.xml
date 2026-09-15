@@ -5,6 +5,13 @@
 <description>Measured notes on Arabic text handling, and the upstream fixes that came out of them.</description>
 <language>en</language>
 <item>
+  <title>Arabic runs right to left. Arabic numbers do not.</title>
+  <link>https://syamjith-nk.github.io/arabic-numbers-are-not-right-to-left/</link>
+  <guid>https://syamjith-nk.github.io/arabic-numbers-are-not-right-to-left/</guid>
+  <pubDate>Tue, 15 Sep 2026 00:00:00 +0000</pubDate>
+  <description>Arabic-Indic digits sat inside pypdf's right-to-left range, so a number extracted in reverse. A two-line fix, merged, and why the mistake is so easy to make.</description>
+</item>
+<item>
   <title>The maintainer did not take the fix my tool recommends. He was right.</title>
   <link>https://syamjith-nk.github.io/the-maintainer-did-not-take-my-fix/</link>
   <guid>https://syamjith-nk.github.io/the-maintainer-did-not-take-my-fix/</guid>
