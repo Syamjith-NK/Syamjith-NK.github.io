@@ -2,9 +2,9 @@
 <html lang="en"><head><meta charset="utf-8">
 <meta name="viewport" content="width=device-width,initial-scale=1">
 <title>Arabic runs right to left. Arabic numbers do not. — Syamjith NK</title>
-<meta name="description" content="Arabic-Indic digits sat inside pypdf's right-to-left range, so a page reading 1234 extracted as 4321. A two-line fix, merged, and the reason the mistake is so easy to make.">
+<meta name="description" content="Arabic-Indic digits sat inside pypdf's right-to-left range, so a page reading 1234 extracted as 4321. A two-line fix, now shipping in pypdf 6.19.0, and the reason the mistake is so easy to make.">
 <meta property="og:title" content="Arabic runs right to left. Arabic numbers do not.">
-<meta property="og:description" content="Arabic-Indic digits sat inside pypdf's right-to-left range, so a page reading 1234 extracted as 4321. A two-line fix, merged, and the reason the mistake is so easy to make.">
+<meta property="og:description" content="Arabic-Indic digits sat inside pypdf's right-to-left range, so a page reading 1234 extracted as 4321. A two-line fix, now shipping in pypdf 6.19.0, and the reason the mistake is so easy to make.">
 <meta property="og:type" content="article">
 <style>
 :root{ --ink:#16181d; --ink-2:#3f454d; --ink-3:#767d87; --line:#e3e6ea; --bg:#fbfbfa; --link:#0b5cd5; --code:#f2f3f5; }
@@ -46,14 +46,14 @@ footer{margin-top:52px;padding-top:22px;border-top:1px solid var(--line);color:v
  "@context": "https://schema.org",
  "@type": "BlogPosting",
  "headline": "Arabic runs right to left. Arabic numbers do not.",
- "description": "Arabic-Indic digits sat inside pypdf's right-to-left range, so a page reading 1234 extracted as 4321. A two-line fix, merged, and the reason the mistake is so easy to make.",
+ "description": "Arabic-Indic digits sat inside pypdf's right-to-left range, so a page reading 1234 extracted as 4321. A two-line fix, now shipping in pypdf 6.19.0, and the reason the mistake is so easy to make.",
  "url": "https://syamjith-nk.github.io/arabic-numbers-are-not-right-to-left/",
  "mainEntityOfPage": {
   "@type": "WebPage",
   "@id": "https://syamjith-nk.github.io/arabic-numbers-are-not-right-to-left/"
  },
  "datePublished": "2026-09-15",
- "dateModified": "2026-09-15",
+ "dateModified": "2026-09-17",
  "inLanguage": "en",
  "author": {
   "@type": "Person",
@@ -234,12 +234,17 @@ gone does not tell you what the fix cost.</p>
 <h2>What this is and is not</h2>
 
 <p>It is two lines in a library I had not contributed to before, merged by
-<a href="https://github.com/stefan6419846">stefan6419846</a> the day after it was opened. It is
-not in a released version: the latest tag, 6.18.1, predates the merge by three days, so
-<code>pip install pypdf</code> today still reverses your digits. It does not close
-<a href="https://github.com/py-pdf/pypdf/issues/1629">#1629</a>, the broader issue about Arabic
-mixed with digits and punctuation, which has been open since February 2023 and remains open. And
-one merged pull request does not make me a pypdf contributor in any sense worth claiming.</p>
+<a href="https://github.com/stefan6419846">stefan6419846</a> the day after it was opened. It does
+not close <a href="https://github.com/py-pdf/pypdf/issues/1629">#1629</a>, the broader issue about
+Arabic mixed with digits and punctuation, which has been open since February 2023 and remains open.
+And one merged pull request does not make me a pypdf contributor in any sense worth claiming.</p>
+
+<p><strong>Update, 17 September 2026.</strong> When this was published the fix was merged but
+unreleased, and the paragraph above said so: the newest tag was 6.18.1, cut three days before the
+merge, so <code>pip install pypdf</code> still reversed your digits. That is no longer true.
+<a href="https://github.com/py-pdf/pypdf/releases/tag/6.19.0">pypdf&nbsp;6.19.0</a> was published on
+16 September and contains it. Installing pypdf today gets you digits in the right order, which is
+the only version of this that was ever the point.</p>
 
 <p>What it is, is a small confirmation of something the last few weeks of this have kept
 demonstrating: the bugs in Arabic text handling are rarely hard, they are unattended. Two lines,
@@ -247,7 +252,7 @@ in plain sight, in a repository with ten thousand stars and an open issue touchi
 since 2023. They survive because almost nobody who reads the code reads the output.</p>
 
 <footer>
-The change is <a href="https://github.com/py-pdf/pypdf/pull/4077">pypdf&nbsp;#4077</a>, merged 14 September 2026.
+The change is <a href="https://github.com/py-pdf/pypdf/pull/4077">pypdf&nbsp;#4077</a>, merged 14 September 2026 and released in <a href="https://github.com/py-pdf/pypdf/releases/tag/6.19.0">6.19.0</a> on 16 September.
 The earlier upstream work is <a href="https://github.com/matplotlib/matplotlib/pull/32263">matplotlib&nbsp;#32263</a>
 and <a href="https://github.com/python-pillow/Pillow/pull/9925">Pillow&nbsp;#9925</a>.
 The checker is <a href="https://github.com/Syamjith-NK/arabic-lint">arabic-lint</a> (<code>pip install arabic-lint</code>).
