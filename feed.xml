@@ -5,6 +5,13 @@
 <description>Measured notes on Arabic text handling, and the upstream fixes that came out of them.</description>
 <language>en</language>
 <item>
+  <title>You already strip two of these three. That was the whole bug report.</title>
+  <link>https://syamjith-nk.github.io/you-already-strip-two-of-these-three/</link>
+  <guid>https://syamjith-nk.github.io/you-already-strip-two-of-these-three/</guid>
+  <pubDate>Sat, 26 Sep 2026 00:00:00 +0000</pubDate>
+  <description>SentencePiece's default normalizer stripped LRM and RLM but not U+061C. The argument that got it fixed in three days was consistency, not frequency - and three other Google repos I checked were clean.</description>
+</item>
+<item>
   <title>Arabic runs right to left. Arabic numbers do not.</title>
   <link>https://syamjith-nk.github.io/arabic-numbers-are-not-right-to-left/</link>
   <guid>https://syamjith-nk.github.io/arabic-numbers-are-not-right-to-left/</guid>

@@ -1,0 +1,340 @@
+<!doctype html>
+<html lang="en"><head><meta charset="utf-8">
+<meta name="viewport" content="width=device-width,initial-scale=1">
+<title>You already strip two of these three. That was the whole bug report. &mdash; Syamjith NK</title>
+<meta name="description" content="SentencePiece's default normalizer mapped two of the three Unicode directional marks to a space and left U+061C alone. The argument that got it fixed in three days was consistency, not frequency. Three other Google repositories I checked were clean, and that denominator is the point.">
+<meta property="og:title" content="You already strip two of these three. That was the whole bug report.">
+<meta property="og:description" content="SentencePiece's default normalizer mapped two of the three Unicode directional marks to a space and left U+061C alone. The argument that got it fixed in three days was consistency, not frequency. Three other Google repositories I checked were clean, and that denominator is the point.">
+<meta property="og:type" content="article">
+<style>
+:root{ --ink:#16181d; --ink-2:#3f454d; --ink-3:#767d87; --line:#e3e6ea; --bg:#fbfbfa; --link:#0b5cd5; --code:#f2f3f5; }
+@media (prefers-color-scheme:dark){
+  :root{ --ink:#e8eaed; --ink-2:#b9c0c9; --ink-3:#767d87; --line:#282c33; --bg:#14161a; --link:#79aaff; --code:#1c1f25; }
+}
+*{box-sizing:border-box}
+body{margin:0;background:var(--bg);color:var(--ink);
+ font:17.5px/1.7 -apple-system,BlinkMacSystemFont,"Segoe UI",Inter,system-ui,sans-serif;-webkit-font-smoothing:antialiased}
+.wrap{max-width:44rem;margin:0 auto;padding:clamp(28px,6vw,72px) clamp(20px,5vw,32px)}
+a{color:var(--link)}
+.back{font-size:14px;color:var(--ink-3);text-decoration:none}
+h1{font-size:clamp(28px,4.4vw,38px);line-height:1.18;letter-spacing:-.022em;margin:26px 0 10px}
+h2{font-size:21px;letter-spacing:-.012em;margin:44px 0 12px}
+.date{color:var(--ink-3);font-size:14.5px;margin:0 0 6px}
+p{color:var(--ink-2);margin:0 0 19px}
+strong{color:var(--ink)}
+code{background:var(--code);padding:.12em .34em;border-radius:4px;font-size:.9em;
+ font-family:ui-monospace,SFMono-Regular,Menlo,"Noto Naskh Arabic","Geeza Pro","Arial Unicode MS",monospace}
+pre{background:var(--code);padding:16px 18px;border-radius:8px;overflow-x:auto;margin:0 0 20px}
+pre code{background:none;padding:0;font-size:14px;line-height:1.55}
+pre code, code{font-variant-ligatures:none}
+blockquote{margin:0 0 20px;padding:2px 0 2px 18px;border-left:3px solid var(--line);color:var(--ink-2)}
+blockquote p:last-child{margin-bottom:0}
+table{border-collapse:collapse;width:100%;margin:0 0 22px;font-size:15.5px}
+th,td{text-align:left;padding:9px 12px;border-bottom:1px solid var(--line)}
+th{color:var(--ink-3);font-weight:600;font-size:13px;text-transform:uppercase;letter-spacing:.05em}
+ul{color:var(--ink-2);padding-left:22px;margin:0 0 19px}
+li{margin:0 0 8px}
+footer{margin-top:52px;padding-top:22px;border-top:1px solid var(--line);color:var(--ink-3);font-size:14.5px}
+</style><meta name="author" content="Syamjith NK">
+<link rel="canonical" href="https://syamjith-nk.github.io/you-already-strip-two-of-these-three/">
+<link rel="me" href="https://syamjithnk.com">
+<link rel="me" href="https://github.com/Syamjith-NK">
+<meta property="og:url" content="https://syamjith-nk.github.io/you-already-strip-two-of-these-three/">
+<meta property="article:author" content="Syamjith NK">
+<script type="application/ld+json">
+{
+ "@context": "https://schema.org",
+ "@type": "BlogPosting",
+ "headline": "You already strip two of these three. That was the whole bug report.",
+ "description": "SentencePiece's default normalizer mapped two of the three Unicode directional marks to a space and left U+061C alone. The argument that got it fixed in three days was consistency, not frequency. Three other Google repositories I checked were clean, and that denominator is the point.",
+ "url": "https://syamjith-nk.github.io/you-already-strip-two-of-these-three/",
+ "mainEntityOfPage": {
+  "@type": "WebPage",
+  "@id": "https://syamjith-nk.github.io/you-already-strip-two-of-these-three/"
+ },
+ "datePublished": "2026-09-26",
+ "dateModified": "2026-09-26",
+ "inLanguage": "en",
+ "author": {
+  "@type": "Person",
+  "name": "Syamjith NK",
+  "url": "https://syamjithnk.com",
+  "jobTitle": "Cinematographer and AI creative technologist",
+  "sameAs": [
+   "https://syamjithnk.com",
+   "https://github.com/Syamjith-NK",
+   "https://huggingface.co/syamjithnk",
+   "https://pypi.org/project/arabic-lint/",
+   "https://pypi.org/project/arabic-tts-frontend/",
+   "https://stackoverflow.com/users/33097750/syamjith-nk"
+  ]
+ },
+ "publisher": {
+  "@type": "Person",
+  "name": "Syamjith NK",
+  "url": "https://syamjithnk.com",
+  "jobTitle": "Cinematographer and AI creative technologist",
+  "sameAs": [
+   "https://syamjithnk.com",
+   "https://github.com/Syamjith-NK",
+   "https://huggingface.co/syamjithnk",
+   "https://pypi.org/project/arabic-lint/",
+   "https://pypi.org/project/arabic-tts-frontend/",
+   "https://stackoverflow.com/users/33097750/syamjith-nk"
+  ]
+ },
+ "isPartOf": {
+  "@type": "Blog",
+  "name": "Syamjith NK — writing",
+  "url": "https://syamjith-nk.github.io/"
+ }
+}
+</script>
+</head>
+<body><div class="wrap">
+<a class="back" href="/">&larr; Syamjith NK</a>
+<p class="date" style="margin-top:26px">26 September 2026 &middot; Syamjith NK</p>
+<h1>You already strip two of these three. That was the whole bug report.</h1>
+
+<p>On 19 September I opened
+<a href="https://github.com/google/sentencepiece/issues/1331">an issue on google/sentencepiece</a>:
+<code>nmt_nfkc</code>, the default text normalizer used when training a SentencePiece model, maps
+U+200E LEFT-TO-RIGHT MARK and U+200F RIGHT-TO-LEFT MARK to a space, and leaves U+061C ARABIC LETTER
+MARK alone. On 22 September
+<a href="https://github.com/google/sentencepiece/commit/c9e4719b27eba6848d6d525ff5e73ef101027ab3">Taku
+Kudo committed the fix</a> and closed it.</p>
+
+<p><strong>I did not write that fix.</strong> I reported it. The patch is his: one line in
+<code>src/builder.cc</code>, a regenerated lookup table, and twelve lines of test. That distinction
+matters enough to put in the second paragraph, because &ldquo;found a bug in Google&rsquo;s
+tokenizer&rdquo; and &ldquo;fixed Google&rsquo;s tokenizer&rdquo; are different sentences and only
+the first one is mine.</p>
+
+<p>The bug itself is small. What is worth writing down is where I was looking, why the argument
+worked, and the three repositories where I looked and found nothing.</p>
+
+<h2>The remaining bugs are in the characters that have no appearance</h2>
+
+<p>Reading a lot of Arabic handling in other people&rsquo;s libraries has produced a fairly
+consistent shape. Letters are usually fine. Shaping is usually fine. Digits are mostly fine, with
+<a href="/arabic-numbers-are-not-right-to-left/">exceptions</a>. These get fixed because they are
+visible: when they break, the output looks wrong, somebody eventually sees it, and somebody
+eventually files it.</p>
+
+<p>Unicode also has twelve bidirectional control characters. Nine are explicit scope markers, the
+embeddings, overrides, isolates and their pops. Three are marks: LRM, RLM, and ALM, the Arabic
+letter mark. <strong>None of the twelve draws anything.</strong> They survive a proofread, a diff
+review, a copy-paste, and a person reading the file aloud. Nothing about them announces itself, so
+nobody looks, so nobody files.</p>
+
+<p><code>nmt_nfkc</code> handled two of the twelve.</p>
+
+<h2>Consistency is arguable. Frequency is not.</h2>
+
+<p>There was an obvious way to write this issue and it was the wrong one:
+<em>ALM is common in Arabic text, so a tokenizer used for Arabic ought to strip it.</em> I have no
+measurement of how often ALM appears in real corpora. If a maintainer had asked me for one I would
+have had nothing, and he would have been right to ask.</p>
+
+<p>So the issue does not mention frequency at all. It makes one claim:</p>
+
+<blockquote><p>You already map U+200E and U+200F to a space. U+061C does the same job for
+Arabic-script runs that those two do everywhere else, and it is not in the list.</p></blockquote>
+
+<p>That is checkable in about ten seconds, in the maintainer&rsquo;s own source file, without
+trusting anything I say about Arabic. Here is the list it is about, after the patch:</p>
+
+<pre><code>  (*chars_map)[{0x000A}] = {0x20};  // LINE FEED
+  (*chars_map)[{0x000C}] = {0x20};  // FORM FEED
+  (*chars_map)[{0x000D}] = {0x20};  // CARRIAGE RETURN
++ (*chars_map)[{0x061C}] = {0x20};  // ARABIC LETTER MARK
+  (*chars_map)[{0x1680}] = {0x20};  // OGHAM SPACE MARK
+  (*chars_map)[{0x200B}] = {0x20};  // ZERO WIDTH SPACE
+  (*chars_map)[{0x200E}] = {0x20};  // LEFT-TO-RIGHT MARK
+  (*chars_map)[{0x200F}] = {0x20};  // RIGHT-TO-LEFT MARK</code></pre>
+
+<p>The fix is the line in the middle. The argument is the two lines at the bottom, which were
+already there.</p>
+
+<p>I think this generalises, and it is the part I would keep if I could keep one thing:
+<strong>the strongest bug report about a minority script is usually not &ldquo;you handled my
+language wrong&rdquo;. It is &ldquo;you already do this for the majority case, and you skipped
+one member of the same class.&rdquo;</strong> The first asks a maintainer to take your word for
+something he cannot check. The second asks him to read his own file.</p>
+
+<h2>What it costs, measured</h2>
+
+<p>Consistency gets an issue read. A cost gets it fixed. The measurement I attached was on
+<code>google/mt5-base</code>, whose tokenizer is a shipped SentencePiece model that people train
+and fine-tune against today.</p>
+
+<p>Take an Arabic test phrase, tokenize it, and you get five pieces. Insert a single ALM, which
+changes nothing you can see, and you get seven. The interesting part is not the count. It is that
+the word <span dir="rtl">بالعالم</span> stops being one word-initial piece and becomes a bare
+word-start marker, then the ALM, then the word, so the piece the model actually learned for that
+word at the start of a word is never used. Put an RLM in the same position and nothing changes at
+all, because the RLM is stripped before the tokenizer ever sees it.</p>
+
+<p>Two strings that are visually identical, two different token sequences, and which one you get
+depends on which pipeline last touched the text.</p>
+
+<h2>Merged is not released, and released is not installed</h2>
+
+<p>This is the part I would have got wrong if I had stopped at the green check mark.</p>
+
+<p>SentencePiece&rsquo;s newest release is <strong>v0.2.2, published 12 July 2026</strong>. The fix
+landed on 22 September. Asking GitHub to compare the two puts the fix <strong>164 commits ahead of
+the tag, and zero behind</strong>, which is the machine-readable way of saying it is in no release
+at all. PyPI agrees: <code>pip install sentencepiece</code> today gets you 0.2.2, uploaded the same
+day in July, and it still passes U+061C straight through. &ldquo;Fixed&rdquo; describes the
+repository. It does not yet describe anything anyone runs.</p>
+
+<p>That much is a waiting problem and it resolves itself on the next release. The second half does
+not. A SentencePiece model file does not reference a normalizer by name and look it up at load
+time; it carries one. The field is <code>precompiled_charsmap</code> in the model proto, described
+in the source as the <em>pre-compiled normalization rule</em>, and it is serialised into the
+<code>.model</code> file when the model is trained:</p>
+
+<pre><code>// Pre-compiled normalization rule created by
+// Builder::GetPrecompiledCharsMap() or Builder::CompileCharsMap() method.
+optional bytes precompiled_charsmap = 2;</code></pre>
+
+<p>So every SentencePiece model that already exists keeps the normalizer it was trained with,
+permanently, no matter what version of the library loads it. The fix reaches models trained after
+it ships. It cannot reach mT5, or anything else already published, ever. Retraining is the only
+route, and nobody retrains a tokenizer over one invisible character.</p>
+
+<p>The general form is worth stating plainly, because I keep rediscovering it:
+<strong>reporting a bug upstream fixes the future, not the installed base.</strong> A rendering bug
+is fixed the moment you upgrade. A tokenizer defect has a tail measured in model generations. It is
+also the honest answer to a question I have been asked about
+<a href="https://pypi.org/project/arabic-lint/">arabic-lint</a>, which now has a bidi-controls
+check whose <em>residue</em> band is exactly this case, a lone ALM, LRM or RLM sitting in text: if
+upstream fixes it, why keep a detector? Because upstream fixing it does not change a single byte on
+your disk, or in the model you are about to fine-tune.</p>
+
+<h2>The other Google repositories I checked were fine</h2>
+
+<p>One filed issue and a headline about Google&rsquo;s Arabic handling would be dishonest
+arithmetic, so here is the denominator. The sweep that turned up the SentencePiece case went
+through other Google-owned code that touches Arabic, and the rest of it came back clean. Two are
+worth recording in detail, because a clean verdict is only worth something if you say how you
+checked it.</p>
+
+<p><strong>google/re2.</strong> Its <code>\p{Arabic}</code> character class is a generated table of
+integer ranges in <code>unicode_groups.cc</code>. I expanded it and compared it against
+<code>Scripts.txt</code> from the Unicode version re2 generates from, 15.1.0. It is
+<strong>1,368 codepoints against 1,368, identical, with nothing extra on either side.</strong> Not
+approximately right. Bit-exact, including U+061C itself, which re2 correctly classifies as Arabic
+script.</p>
+
+<p><strong>google/libphonenumber.</strong> Arabic-Indic and Eastern Arabic-Indic digits are handled
+correctly everywhere I looked, including the as-you-type formatter, and the reason is a design
+decision rather than an Arabic-specific effort. Its digit pattern is <code>\p{Nd}</code>, the
+Unicode decimal-number property, and normalisation runs through
+<code>Character.digit(c, 10)</code>, which resolves any Unicode digit to its value. Nobody wrote
+Arabic support into it. They declined to write an ASCII assumption into it, which turns out to be
+the same thing.</p>
+
+<p>That contrast is the whole post in miniature. The list of bidi controls in
+<code>nmt_nfkc</code> was <em>tabulated by hand</em>, so it had a hole in it that nothing could
+detect. libphonenumber&rsquo;s notion of a digit is <em>derived from a Unicode property</em>, so it
+cannot have a hole: anything Unicode adds classifies itself. A hand-written list of characters is a
+bug with a delay on it.</p>
+
+<p>There was one more real finding in libphonenumber and I did not report it. A directional mark
+sitting inside a number makes the number <em>invalid</em> rather than silently wrong: it is
+rejected, loudly, at the point of parsing, instead of being parsed into a different number. That is
+wrong-but-safe. Every argument this blog has made for three weeks is that the quiet failures are
+the dangerous ones, and filing a loud one would be inconsistent with a rule I actually hold. A
+maintainer&rsquo;s attention is a real budget and it is not mine to spend on tidiness.</p>
+
+<h2>The framing I refused</h2>
+
+<p>While comparing re2&rsquo;s table I noticed something with a much better headline in it. re2
+generates its Unicode tables from 15.1.0, and three Unicode releases have shipped since: 16.0,
+17.0 and 18.0. The post writes itself: <em>re2&rsquo;s Arabic support is three Unicode versions
+out of date.</em></p>
+
+<p>It is true, and it is misleading, which is worse than being false. So I counted the gap. Between
+Unicode 15.1.0 and the current 18.0 there are <strong>22,995 newly assigned codepoints across 38
+scripts</strong>, and this is where they are:</p>
+
+<table>
+<thead><tr><th>script</th><th>new codepoints</th><th>share of the gap</th></tr></thead>
+<tbody>
+<tr><td>Seal Script</td><td>11,328</td><td>49.26%</td></tr>
+<tr><td>Han</td><td>4,322</td><td>18.80%</td></tr>
+<tr><td>Egyptian Hieroglyphs</td><td>3,995</td><td>17.37%</td></tr>
+<tr><td>Common</td><td>970</td><td>4.22%</td></tr>
+<tr><td>Jurchen</td><td>965</td><td>4.20%</td></tr>
+<tr><td>&hellip;</td><td></td><td></td></tr>
+<tr><td><strong>Arabic (10th)</strong></td><td><strong>84</strong></td><td><strong>0.37%</strong></td></tr>
+</tbody>
+</table>
+
+<p>Half the gap is Seal Script. Another third is Han and Egyptian hieroglyphs. Arabic is tenth, at
+84 codepoints and just over a third of one percent, and I would guess most of those 84 are
+characters no Arabic document I will ever meet contains.</p>
+
+<p>So the honest sentence is: re2 vendors a Unicode release or three behind, like most projects
+that vendor Unicode at all, and Arabic is among the least affected scripts in the gap. That is not
+a blog post. Not writing it is most of the reason the rest of this one can be believed.</p>
+
+<h2>My own harness nearly published something false. Twice.</h2>
+
+<p>The probe that found the SentencePiece case needed to know which characters are directional
+marks. The elegant way to get that is to derive it: a mark is a format character, category
+<code>Cf</code>, with a strong bidirectional class, <code>L</code>, <code>R</code> or
+<code>AL</code>. It is a satisfying one-liner and it is wrong.</p>
+
+<p>Run it over the whole codespace and it matches <strong>23 characters</strong>. Three of them are
+directional controls. The rest are U+070F SYRIAC ABBREVIATION MARK, two Kaithi number signs, and
+sixteen Egyptian hieroglyph joiners and segment marks, all of them characters somebody typed on
+purpose. Had that shipped, the tool would report a Syriac abbreviation mark, in Syriac text, as
+Arabic bidi residue. It is the identical mistake to the one I
+<a href="/is-arabic-training-data-corrupted/">made and published a correction for</a> two weeks ago,
+where ornate Quranic parentheses read as shaping damage and produced a confident 35.6%.</p>
+
+<p>The property that actually separates them is <code>Bidi_Control=Yes</code>, and the standard
+library does not expose it, so the three marks are named rather than derived. There is a test that
+asserts the naive derivation over-matches, so the comment explaining why cannot quietly become
+false.</p>
+
+<p>The second one is duller and more embarrassing. A check in the same harness printed a confident
+conclusion in the same run in which its own assertion returned False. The conclusion was the thing I
+would have published. The assertion was the thing that knew better, and it was sitting right next to
+it, not wired into anything. <strong>Put the assertions inside the measurement, not beside it.</strong>
+A harness pointed at somebody else&rsquo;s code with no way to fail is not a measurement, it is a
+printer.</p>
+
+<h2>The test is the part I would point at</h2>
+
+<p>Kudo&rsquo;s patch adds twelve lines of test, and it does not assert that ALM is stripped. It
+asserts the same property three times, once per mark, in two different normalizer configurations:</p>
+
+<pre><code>EXPECT_EQ(WS "a" WS "b", normalizer.Normalize("a\xe2\x80\x8e" "b"));  // LRM
+EXPECT_EQ(WS "a" WS "b", normalizer.Normalize("a\xe2\x80\x8f" "b"));  // RLM
+EXPECT_EQ(WS "a" WS "b", normalizer.Normalize("a\xd8\x9c"     "b"));  // ALM</code></pre>
+
+<p>That is the consistency argument, encoded. The test does not care which characters are in the
+list; it fails the moment one of the three stops behaving like the other two, which is precisely
+the failure that created the bug in the first place. A test that only proved ALM was fixed would
+have left the next member of the class exactly as exposed as this one was.</p>
+
+<p>Three days, one line of library code, and none of it required anyone to trust a stranger about
+Arabic. The invisible characters are where the rest of this lives, and the way in is not to argue
+that your language matters. It is to find the place where a project already did the right thing,
+once, and stopped one short.</p>
+
+<footer>
+The issue is <a href="https://github.com/google/sentencepiece/issues/1331">google/sentencepiece&nbsp;#1331</a>,
+fixed in <a href="https://github.com/google/sentencepiece/commit/c9e4719b27eba6848d6d525ff5e73ef101027ab3">c9e4719</a>
+by <a href="https://github.com/taku910">Taku&nbsp;Kudo</a> on 22 September 2026, and not yet in a release.
+Earlier upstream work: <a href="https://github.com/py-pdf/pypdf/pull/4077">pypdf&nbsp;#4077</a>,
+<a href="https://github.com/matplotlib/matplotlib/pull/32263">matplotlib&nbsp;#32263</a> and
+<a href="https://github.com/python-pillow/Pillow/pull/9925">Pillow&nbsp;#9925</a>.
+The checker is <a href="https://github.com/Syamjith-NK/arabic-lint">arabic-lint</a> (<code>pip install arabic-lint</code>).
+<br>Written by <a rel="author me" href="https://syamjithnk.com">Syamjith NK</a>. The research, the measurements and the upstream patches behind this post are at <a href="https://syamjithnk.com/evidence">syamjithnk.com/evidence</a>.
+</footer>
+</div></body></html>
