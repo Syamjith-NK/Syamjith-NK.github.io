@@ -9,7 +9,7 @@
   <link>https://syamjith-nk.github.io/you-already-strip-two-of-these-three/</link>
   <guid>https://syamjith-nk.github.io/you-already-strip-two-of-these-three/</guid>
   <pubDate>Sat, 26 Sep 2026 00:00:00 +0000</pubDate>
-  <description>SentencePiece's default normalizer stripped LRM and RLM but not U+061C. The argument that got it fixed in three days was consistency, not frequency - and three other Google repos I checked were clean.</description>
+  <description>SentencePiece's default normalizer stripped LRM and RLM but not U+061C. The argument that got it fixed in three days was consistency, not frequency - and the other Google repos I checked came back clean.</description>
 </item>
 <item>
   <title>Arabic runs right to left. Arabic numbers do not.</title>
